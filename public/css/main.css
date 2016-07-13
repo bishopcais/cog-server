@@ -1,0 +1,264 @@
+body {
+    background-color: #000;
+    color: #00d500;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.nav {
+    background: #1e1e1e;
+    padding: 16px 15px 0px 15px;
+    text-align: right;
+}
+
+.nav .button {
+    padding: 6px 10px;
+    background: #666;
+    display: inline-block;
+    color: #000;
+    font-weight: bold;
+    margin-left: 5px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.nav .username {
+    display: inline-block;
+    color: #686868;
+    float: left;
+    font-weight: bold;
+    margin-left: 5px;
+}
+.authentication {
+    text-align: center;
+    font-size: 1.2em;
+    padding-top: 80px
+}
+.authentication input {
+    padding: 5px 10px;
+    margin-bottom: 15px;
+    color: #000;
+    /* border: 1px solid #333; */
+}
+.authentication .button {
+    padding: 10px 40px;
+    display: inline-block;
+    background-color: #666;
+    color: #000;
+    cursor: pointer;
+    outline: none;
+    /* border: none; */
+}
+
+.machines {
+    margin: 20px 0px;
+}
+
+.machine-container {
+    margin-bottom: 5px;
+    clear: both;
+    background: rgb(42, 42, 42);
+}
+
+.machine-container.disconnected {
+    background: #1e0200;
+}
+
+.machine-container .machine {
+    width: 265px;
+    min-height: 110px;
+    padding: 20px 0 0 0;
+    margin: 10px;
+    float: left;
+    position: relative;
+}
+.machine-container.disconnected .machine {
+    opacity: .7;
+}
+
+
+.machine-container .cogs{
+    width: calc(100% - 285px);
+    padding: 5px 0 0 5px;
+    background-color: rgba(255, 255, 255, 0.05);
+    float: left;
+    margin: 0 0 0 0px;
+    vertical-align: top;
+}
+.machine-container.disconnected .cogs {
+    opacity: rgba(255, 255, 255, 0.0);
+}
+
+.machine-container .cog {
+    vertical-align: top;
+    margin-right: 5px;
+    width: 365px;
+    min-height: 110px;
+    background-color: rgb(34, 34, 34);
+    padding: 10px;
+    margin-bottom: 5px;
+    display: inline-block;
+    /* cursor: pointer; */
+    position: relative;
+}
+.machine-container.disconnected .cog {
+    opacity: .7;
+}
+
+.machine-container .cog .id {
+    color: #a6a6a6;
+    text-align: center;
+    font-size: 1.1em;
+    margin-bottom: 8px;
+}
+
+.machine-container .cog .key {
+    width: 65px;
+    display: inline-block;
+    color: rgb(123, 123, 123);
+    cursor: default;
+}
+
+.machine-container .cog .stats>div {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.machine-container .cog .stats .key {
+    width: initial;
+}
+
+.machine-container .tags {
+    margin: 10px 0 0 0;
+}
+
+.machine-container .tags .tag {
+    display: inline-block;
+    color: rgb(127, 127, 127);
+    cursor: default;
+    padding: 4px 7px;
+    background-color: #000;
+}
+.machine-container .description {
+    display: inline-block;
+    color: rgb(139, 139, 139);
+    margin-bottom: 10px;
+}
+
+
+.machine-container .cog .status.exit {
+    color: red;
+}
+
+.machine-container .machine .key {
+    width: 65px;
+    display: inline-block;
+    color: rgb(123, 123, 123);
+    cursor: default;
+}
+
+.machine-container .tooltip-inner {
+    white-space:pre;
+    max-width:none;
+}
+.machine-container .tooltipped {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+.machine-container .machine-watcher,
+.machine-container .cog-watcher {
+    display: block;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 1.3em;
+    color: #a8a8a8;
+}
+
+
+.machine-container .disconnected {
+    color: red;
+}
+
+
+.machine-container .toggle-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.machine-container .toggle-button {
+    padding: 1px 9px;
+    background: #050505;
+    display: inline-block;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+}
+.machine-container .toggle-button .fa-angle-up {
+    display: none;
+}
+.machine-container .toggle-button.expanded .fa-angle-down {
+    display: none;
+}
+.machine-container .toggle-button.expanded .fa-angle-up {
+    display: inline;
+}
+
+
+.machine-container .more {
+    margin-top: 10px;
+    border-top: 1px solid #353535;
+    padding-top: 13px;
+    display: none;
+}
+.machine-container .more.expanded {
+    display: block;
+}
+.machine-container .more .buttons {
+    margin-bottom: 10px;
+}
+.machine-container .more .button {
+    display: inline-block;
+    color: #000;
+    background-color: #626262;
+    padding: 4px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-right: 5px;
+}
+.machine-container .more .screen {
+    background: #000;
+    padding: 10px;
+    margin-bottom: 15px;
+    height: 135px;
+    white-space: pre-wrap;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-base-color: pink;
+    scrollbar-arrow-color:purple;
+}
+.machine-container .more .screen .error {
+    color: #b70000;
+}
+
+.machine-container .more .screen::-webkit-scrollbar {
+    width: 1em;
+}
+
+.machine-container .more .screen::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+}
+
+.no-service-icon {
+    display: none;
+    font-size: 3em;
+    color: red;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 10px 20px;
+    background-color: #000;
+}

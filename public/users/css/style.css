@@ -1,0 +1,61 @@
+.user-modal input {
+  font-size: 0.9em;
+  width: 50%;
+  padding: 5px 10px;
+  outline: none;
+  margin: 4px 0;
+}
+
+.user-modal .key {
+  margin: 0 0 5px 5px;
+}
+
+.user-modal .key>span {
+  text-decoration: underline;
+  margin-left: 10px;
+  color: #910000;
+  cursor: pointer;
+  padding: 2px;
+  display: inline-block;
+}
+
+body {
+    background-color: #000;
+    color: #00aa00;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+table {
+  width: 100%;
+  margin: 30px 0;
+  /* font-size: 14px; */
+}
+
+table th {
+   /* border-bottom: 1px solid rgba(255, 255, 255, 0.11); */
+   color: #999999;
+}
+
+table th,
+table td {
+  padding: 2px;
+}
+
+table tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.modal-content {
+  color: #000;
+  font-size: 1.3em;
+}
+
+a.home-button {
+  padding: 10px;
+  display: inline-block;
+  border: 1px;
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.18);
+  text-decoration: none;
+}}
