@@ -31,7 +31,7 @@ app.use(sessionMiddleware);
 app.set('json spaces', 2);
 
 app.use('/api/auth', require('./apis/auth'));
-app.use('/api/query', require('./apis/query'));
+app.use('/api/machine', require('./apis/machine'));
 app.use('/', express.static('public'));
 
 // Server

@@ -1,9 +1,9 @@
 var Machine = require('../models/machine');
 
 module.exports = function(req, res) {
-  filters = req.query || {};
+  var match = req.query || {};
 
-  Machine.find(filters).exec((err, machines) => {
+  Machine.aggregate({ $unwind: '$cogs' }, { $match: match }).exec((err, machines) => {
     if (err)
       res.json({ error: err })
     else
