@@ -1,9 +1,9 @@
-# Cog Watcher Server
+# Central Watcher Server for crun
 
 To use it install packages with
 `npm install`
 
-Then 
+Then to launch
 `node server.js`
 
 Requires mongodb
