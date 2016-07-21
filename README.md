@@ -1,4 +1,4 @@
-# Cog Watcher
+# Cog Watcher Server
 
 To use it install packages with
 `npm install`
