@@ -1,12 +1,20 @@
 var Machine = require('../models/machine');
+var _ = require('lodash');
 
 module.exports = function(req, res) {
-  var match = req.query || {};
+  var query = req.query ? _.cloneDeep(req.query) : {};
+  var args = [];
 
-  Machine.aggregate({ $unwind: '$cogs' }, { $match: match }).exec((err, machines) => {
+  if (query['$unwind']) {
+    args.push({ $unwind: query['$unwind'] });
+    delete query['$unwind'];
+  }
+  args.push({ $match: query });
+
+  Machine.aggregate.apply(Machine, args).exec((err, machines) => {
     if (err)
-      res.json({ error: err })
+      res.status(400).json({ error: err });
     else
-      res.send({ entries: machines })
+      res.send({ entries: machines });
   })
 }
