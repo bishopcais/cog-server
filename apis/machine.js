@@ -9,6 +9,13 @@ module.exports = function(req, res) {
     args.push({ $unwind: query['$unwind'] });
     delete query['$unwind'];
   }
+
+  var limit = Number(query['$limit']);
+  if (limit) {
+    args.push({ $limit: limit });
+    delete query['$limit'];
+  }
+
   args.push({ $match: query });
 
   Machine.aggregate.apply(Machine, args).exec((err, machines) => {
