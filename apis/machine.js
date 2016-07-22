@@ -5,15 +5,15 @@ module.exports = function(req, res) {
   var query = req.query ? _.cloneDeep(req.query) : {};
   var args = [];
 
-  if (query['$unwind']) {
-    args.push({ $unwind: query['$unwind'] });
-    delete query['$unwind'];
-  }
-
   var limit = Number(query['$limit']);
   if (limit) {
     args.push({ $limit: limit });
     delete query['$limit'];
+  }
+
+  if (query['$unwind']) {
+    args.push({ $unwind: query['$unwind'] });
+    delete query['$unwind'];
   }
 
   args.push({ $match: query });
