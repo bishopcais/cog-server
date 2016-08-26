@@ -5,18 +5,18 @@ module.exports = function(req, res) {
   var query = req.query ? _.cloneDeep(req.query) : {};
   var args = [];
 
-  var limit = Number(query['$limit']);
-  if (limit) {
-    args.push({ $limit: limit });
-    delete query['$limit'];
-  }
-
   if (query['$unwind']) {
     args.push({ $unwind: query['$unwind'] });
     delete query['$unwind'];
   }
 
   args.push({ $match: query });
+
+  var limit = Number(query['$limit']);
+  if (limit) {
+    args.push({ $limit: limit });
+    delete query['$limit'];
+  }
 
   Machine.aggregate.apply(Machine, args).exec((err, machines) => {
     if (err)
