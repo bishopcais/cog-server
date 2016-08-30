@@ -4,7 +4,6 @@ var
   User = require('../models/user');
 
 // Creates an admin user with username 'admin', and password 'password'
-
 console.log('Connecting...')
 
 mongoose.connect(settings.db)
@@ -14,7 +13,6 @@ mongoose.connection.on('error',
 );
 
 mongoose.connection.once('open', () => {
-
   var user = new User({
     username: 'admin',
     password: 'password',
