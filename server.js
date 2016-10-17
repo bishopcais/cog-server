@@ -9,6 +9,7 @@ var
 
 
 // Connect to the database.
+mongoose.Promise = global.Promise;
 mongoose.connect(settings.db);
 mongoose.connection.on('error', function(err) {
   console.error('MongoDB connection error.');

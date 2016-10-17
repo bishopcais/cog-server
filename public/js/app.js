@@ -146,6 +146,12 @@ var View = Backbone.View.extend({
         cogId: cogId,
         machineId: machineId
       }, action);
+    } else if (action == 'clear') {
+      this.$(
+        '[data-cog-id="' + cogId + 
+        '"][data-machine-id="' + machineId + 
+        '"] [data-container="screen"]'
+      ).empty();
     }
   },
 
