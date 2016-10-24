@@ -14,7 +14,7 @@ var CogSchema = new mongoose.Schema({
   host: String,
   port: String,
 
-  path: String,
+  cwd: String,
   run: String,
   args: [String],
 
@@ -93,7 +93,7 @@ MachineSchema.methods.updateCog = function(c, next) {
   // Update
   _.each([
     'type', 'tags',  'description', 'pid', 'host', 'port',
-    'path', 'run', 'args', 'status', 'exitCode'
+    'run', 'args', 'status', 'exitCode', 'cwd'
   ], (k) => {
     if (c[k]) cog[k] = c[k];
   });

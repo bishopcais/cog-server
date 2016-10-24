@@ -261,8 +261,8 @@ socket.on('disconnect', function(){
   $('.no-service-icon').show();
 })
 socket.on('reconnect', function(){
-  $('.no-service-icon').hide();
-  view.load();
+  // $('.no-service-icon').hide();
+  // view.load();
 })
 
 
