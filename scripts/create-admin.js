@@ -27,13 +27,19 @@ mongoose.connection.once('open', () => {
     ]
   });
 
-  console.log('Creating admin..')
+  console.log('Creating admin...')
   user.save({}, (err) => {
     if (err) {
-      console.error('Error creating admin: ', err);
+      // Don't consider it an error that the admin already exists
+      if (err['name'] == 'MongoError' && err['code'] == 11000) {
+        console.log('admin already exists.');
+      }
+      else {
+        console.error('Error creating admin: ', err);
+      }
     }
     else {
-      console.log('Admin user created.');
+      console.log('admin created.');
     }
     mongoose.connection.close();
     process.exit();
