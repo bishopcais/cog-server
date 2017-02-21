@@ -1,8 +1,9 @@
-var
-  mongoose = require('mongoose'),
-  settings = require('../settings'),
+var mongoose = require('mongoose');
+mongoose.Promise = Promise;
+
+var settings = require('../settings'),
   User = require('../models/user');
-mongoose.Promise = global.Promise;
+
 
 // Creates an admin user with username 'admin', and password 'password'
 console.log('Connecting...')

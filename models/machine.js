@@ -1,7 +1,9 @@
 var
   _ = require('lodash'),
-  mongoose = require('mongoose')
-  User = require('./user');
+  mongoose = require('mongoose');
+mongoose.Promise = Promise;
+
+var User = require('./user');
 
 
 var CogSchema = new mongoose.Schema({

@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var mongoose = require('mongoose');
+mongoose.Promise = Promise;
 var settings = require('../settings');
 var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
