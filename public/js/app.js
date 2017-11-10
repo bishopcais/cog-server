@@ -45,7 +45,7 @@ var View = Backbone.View.extend({
 
   renderMachine: function(machine) {
     var view = this;
-    var mEl = this.getMachineContainer(machine._id);
+    var mEl = this.getMachineContainer(machine.id);
     mEl.find('[data-container="machine"]').html(
       machineTemplate({ machine : machine })
     );
@@ -59,7 +59,7 @@ var View = Backbone.View.extend({
       .html('');
 
     machine.cogs.forEach(function(cog) {
-      cog.machineId = machine._id;
+      cog.machine_id = machine.id;
     });
     
     this.renderCogs(machine.cogs);
@@ -74,17 +74,16 @@ var View = Backbone.View.extend({
 
   renderCog: function(cog) {
     var div = this.$(
-      '[data-cog-_id= ' + cog._id + 
-      '][data-machine-id="' + cog.machineId + '"]'
+      '[data-cog-id= ' + cog.id + 
+      '][data-machine-id="' + cog.machine_id + '"]'
     );
     if (!div.length) {
       div = $(
-        '<div class="cog" data-cog-_id="' + cog._id + 
-        '" data-cog-id="' + cog.id + '"' +
-        '" data-machine-id="' + cog.machineId + '">'
+        '<div class="cog" data-cog-id="' + cog.id + 
+        '" data-machine-id="' + cog.machine_id + '">'
       );
       this
-        .getMachineContainer(cog.machineId)
+        .getMachineContainer(cog.machine_id)
         .find('[data-container="cogs"]')
         .append(div);
       div.html( cogTemplate({ cog: cog }) );
@@ -96,9 +95,10 @@ var View = Backbone.View.extend({
   },
 
   removeCog: function(cog) {
+    console.log(cog);
     this.$(
       '[data-cog-id= ' + cog.id + 
-      '][data-machine-id="' + cog.machineId + '"]'
+      '][data-machine-id="' + cog.machine_id + '"]'
     ).remove();
   },
 
@@ -156,6 +156,7 @@ var View = Backbone.View.extend({
   },
 
   onStream: function(o) {
+    console.log(o);
     var el = this.$(
       '[data-cog-id="' + o.cogId + 
       '"][data-machine-id="' + o.machineId + 

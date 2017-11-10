@@ -1,26 +1,33 @@
-# Central Watcher Server for crun
+crun-server
+===========
 
-Step 1: Install npm libraries
-`npm install`
+This is a central watcher server for crun and the crun-cli interface.
 
-Step 2: Create a settings file by copying from sample
-`cp settings.js.sample settings.js`
+## Requirements
+* Postgresql
 
-Step 3: Create an admin user using a provided script
-`node scripts/create-admin.js`
+## Installation
+```bash
+npm install
+node_modules/.bin/sequelize --url 'postgres://localhost:5432/cir' db:migrate
+```
 
-Step 4: Launch
-`node server.js`
+## Usage
+```bash
+node server.js
+```
 
-Requires mongodb
+## Default User
+You can create a default user for the system by doing:
+```bash
+node_modules/.bin/sequelize --url 'postgres://localhost:5432/cir' db:seed:all
+```
+This will create a user named `admin` with password `password` to use when logging
+in. The user will also have one key setup with the value `key`.
 
-To create a new user, simply run `node user-setup.js`.
-
-This will create a new user `admin` with password `password`.
-
-To use this user, you must add an API key to the user by going to Users tab on
-on crun-watch site, edit the user and add a key. Then you can use this user
-from the crun-cli by doing:
+## crun-cli
+To integrate into crun-cli, you must add a user and key to crun-cli. You can do this
+by doing:
 ```
 crun config -u <user> -k <key>
 ```

@@ -54,12 +54,12 @@
     <% if (machine.connected == true) { %>
     <div class="connected">
       <span class="key"><i class="fa fa-link"></i></span>
-      <%= moment(machine.lastConnected).format('MM/DD/YY hh:MMa') %>
+      <%= moment(machine.last_connected).format('MM/DD/YY hh:MMa') %>
     </div>
     <% } else { %>
     <div class="disconnected">
       <span class="key"><i class="fa fa-unlink"></i> </span>
-      <%= moment(machine.lastDisconnected).format('MM/DD/YY hh:MMa') %>
+      <%= moment(machine.last_disconnected).format('MM/DD/YY hh:MMa') %>
     </div>
     <% } %>
     <div class="user">
@@ -69,17 +69,17 @@
       <span class="key">Platform</span> <%= machine.platform %>
     </div>
     <div class="pid">
-      <span class="key">PID</span> <%= machine.pid %> 
+      <span class="key">PID</span> <%= machine.pid %>
     </div>
     <div class="hostname">
-      <span class="key">Hostname</span> <%= machine.hostname %> 
+      <span class="key">Hostname</span> <%= machine.hostname %>
     </div>
     <div class="cpus">
       <span class="key">CPUs</span> 
       <span data-toggle="tooltip" class="tooltipped" title="<%= _.pluck(machine.cpus, 'model').join('\n') %>"><%= machine.cpus.length %></span>
     </div>
     <div class="memory">
-      <span class="key">Memory</span> <%= (machine.memory / (1024 * 1024 * 1024)).toFixed(2) %> GB 
+      <span class="key">Memory</span> <%= (machine.memory / (1024 * 1024 * 1024)).toFixed(2) %> GB
     </div>
 
     <div class="ifaces">
@@ -109,7 +109,7 @@
     <div class="port">
       <span class="key">Port</span> <%= cog.port %>
     </div>
-    <div class="port">
+    <div class="command">
       <span class="key">Command</span> <%= cog.run %>  <%= cog.args.join(' ') %>
     </div>
     <div class="pid">

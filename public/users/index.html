@@ -26,7 +26,7 @@
       <td class="username"> <%= user.username %> </td>
       <td class="name"> <%= user.name %> </td>
       <td class="email"><%= user.email %></td>
-      <td class="is-admin"> <%= user.isAdmin %> </td>
+      <td class="is-admin"> <%= user.is_admin %> </td>
       <td class="keys"><%= user.keys && _.pluck(user.keys, 'key').join(', ') %></td>
       <td class="actions">
         <button class="btn btn-default btn-xs" data-username="<%= user.username %>" data-action="edit"> <i class="fa fa-edit"></i> </button>
@@ -59,7 +59,7 @@
 
           <div class="checkbox">
             <label>
-              <input type="checkbox" name="is-admin" <%= user.isAdmin ? 'checked="checked"': '' %> > Is Admin
+              <input type="checkbox" name="is-admin" <%= user.is_admin ? 'checked="checked"': '' %> > Is Admin
             </label>
           </div>
           
