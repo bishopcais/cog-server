@@ -3,6 +3,7 @@ var rowTemplate = _.template($('#user-row-template').html());
 var keyTemplate = _.template($('#key-template').html());
 var modalTemplate = _.template($('#user-modal-template').html());
 
+
 var ModalView = Backbone.View.extend({
   el: '<div class="modal"></div>',
 
@@ -13,23 +14,21 @@ var ModalView = Backbone.View.extend({
   },
 
   save: function() {
-    var u = {
+    u = {
       username: this.$('[name=username]').val(),
       email: this.$('[name=email]').val(),
       name: this.$('[name=name]').val(),
       password: this.$('[name=password]').val(),
-      is_admin: this.$('[name="is-admin"]').prop('checked'),
-      keys: _.map(this.keys, function(k) { return {key: k }; })
-    };
-    if (!u.username) {
-      return alert('Username cannot be empty.');
+      isAdmin: this.$('[name="is-admin"]').prop('checked'),
+      keys: _.map(this.keys, function(k) { return { key : k }})
     }
+    if (!u.username) return alert('Username cannot be empty.')
     socket.emit('u user', u);
     this.$el.modal('hide');
   },
 
   addKey: function() {
-    this.keys.push(this.$('[name=new-key]').val());
+    this.keys.push( this.$('[name=new-key]').val() );
     this.$('[name=new-key]').val('')
     this.keys = _.uniq(this.keys);
     this.showKeys();
@@ -42,19 +41,20 @@ var ModalView = Backbone.View.extend({
   },
 
   show: function(user) {
-    this.$el.html(modalTemplate({ user: user }));
+    this.$el.html( modalTemplate({ user: user }) );
     this.$el.modal('show');
     this.keys = _.pluck(user.keys, 'key');
     this.showKeys();
   },
 
   showKeys: function(keys) {
-    var el = this.$('[data-container=keys]').html('');
+    var el = this.$('[data-container=keys]').html('')
     _.each(this.keys, function(k) {
-      el.append(keyTemplate({ key: k}));
+      el.append( keyTemplate({ key: k}) );
     });
   }
-});
+})
+
 
 var View = Backbone.View.extend({
   initialize: function() {
@@ -111,7 +111,7 @@ var View = Backbone.View.extend({
   },
 
   onClickMore: function(evt) {
-    var user = _.findWhere(this.users, { username: $(evt.currentTarget).attr('data-username') });
+    var user = _.findWhere(this.users, { username: $(evt.currentTarget).attr('data-username') })
     this.showModal(user);
   },
 

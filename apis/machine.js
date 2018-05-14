@@ -1,12 +1,10 @@
-let _ = require('lodash');
-let models = require('../models');
+var Machine = require('../models/machine');
+var _ = require('lodash');
 
 module.exports = function(req, res) {
-  let query = req.query ? _.cloneDeep(req.query) : {};
-  let args = [];
+  var query = req.query ? _.cloneDeep(req.query) : {};
+  var args = [];
 
-  console.log(query);
-  /*
   if (query['$unwind']) {
     args.push({ $unwind: query['$unwind'] });
     delete query['$unwind'];
@@ -14,20 +12,16 @@ module.exports = function(req, res) {
 
   args.push({ $match: query });
 
-  let limit = Number(query['$limit']);
+  var limit = Number(query['$limit']);
   if (limit) {
     args.push({ $limit: limit });
     delete query['$limit'];
   }
 
-  models.machine.aggregate.apply(models.machine, args).exec((err, machines) => {
-    if (err) {
+  Machine.aggregate.apply(Machine, args).exec((err, machines) => {
+    if (err)
       res.status(400).json({ error: err });
-    }
-    else {
+    else
       res.send({ entries: machines });
-    }
-  });
-  */
-  res.send({entries: []});
-};
+  })
+}

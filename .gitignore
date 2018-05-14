@@ -24,7 +24,7 @@ coverage
 build/Release
 
 # Dependency directory
-node_modules/
+node_modules
 
 # Optional npm cache directory
 .npm
@@ -34,6 +34,3 @@ node_modules/
 
 # Settings file
 settings.js
-
-.DS_Store
-.idea/

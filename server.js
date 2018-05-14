@@ -1,12 +1,23 @@
-let http = require('http');
-let settings = require('./settings');
-let express = require('express');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
-let session = require('express-session');
+var
+  http = require('http'),
+  mongoose = require('mongoose'),
+  settings = require('./settings'),
+  express = require('express'),
+  cookieParser = require('cookie-parser'),
+  bodyParser = require('body-parser'),
+  session = require('express-session');
+
+
+// Connect to the database.
+mongoose.Promise = global.Promise;
+mongoose.connect(settings.db);
+mongoose.connection.on('error', function(err) {
+  console.error('MongoDB connection error.');
+  console.error(err);
+});
 
 // Session
-let sessionMiddleware = session({
+var sessionMiddleware = session({
   key: 'express.sid',
   secret: 'secret',
   saveUninitialized: true,
@@ -14,7 +25,7 @@ let sessionMiddleware = session({
 });
 
 // App
-let app = express();
+var app = express();
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(sessionMiddleware);
@@ -22,18 +33,14 @@ app.set('json spaces', 2);
 
 app.use('/api/auth', require('./apis/auth'));
 app.use('/api/machine', require('./apis/machine'));
-app.use('/api/user', require('./apis/user'));
 app.use('/', express.static('public'));
 
 // Server
-let server = http.Server(app);
-server.listen(settings.port, () => {
-  console.log(`Server listening on ${settings.port}`);
-});
+var server = http.Server(app);
+server.listen(settings.port);
 
 // Start socket manager
-
-let io = require('./socket/io');
+var io = require('./socket/io');
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });

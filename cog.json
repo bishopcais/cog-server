@@ -1,9 +1,0 @@
-{
-  "database": {
-    "dialect": "postgresql",
-    "username": "mpeveler",
-    "password": "",
-    "database": "cir",
-    "host": "localhost"
-  }
-}
