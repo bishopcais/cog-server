@@ -5,8 +5,7 @@ let path = require('path');
 let Sequelize = require('sequelize');
 let config = require(path.join(__dirname, '..', 'cog.json'))['database'];
 config['operatorsAliases'] = Sequelize.Op;
-// Set this to true if you want to see all the queries that sequelize generates with our models
-config['logging'] = false;
+//config['logging'] = false;
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 // Contains all of our models
