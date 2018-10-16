@@ -86,6 +86,10 @@ runnerio.on('connection', (socket) => {
         console.log(err);
         return socket.emit('u cog error', 'Database error.');
       }
+      else if (c.id == undefined) {
+        console.error(`ERROR: id for ${JSON.stringify(c. null, 2)} is undefined.`);
+        return socket.emit('u cog error', 'cog id error.');
+      }
       var cog = _.find(machine.cogs, { id: c.id }).toJSON();
       cog.machineId = machine._id;
       socket.emit('u cog success');
