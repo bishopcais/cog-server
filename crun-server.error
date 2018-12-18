@@ -1,0 +1,17 @@
+MongoDB connection error.
+{ DisconnectedError: Ran out of retries trying to reconnect to "localhost:27017". Try setting `server.reconnectTries` and `server.reconnectInterval` to something higher.
+    at new DisconnectedError (/Users/mpeveler/Github/CISL/crun-server/node_modules/mongoose/lib/error/disconnected.js:21:11)
+    at Server.<anonymous> (/Users/mpeveler/Github/CISL/crun-server/node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:64:31)
+    at Server.emit (events.js:187:15)
+    at Pool.<anonymous> (/Users/mpeveler/Github/CISL/crun-server/node_modules/mongodb-core/lib/topologies/server.js:319:16)
+    at Pool.emit (events.js:182:13)
+    at Connection.<anonymous> (/Users/mpeveler/Github/CISL/crun-server/node_modules/mongodb-core/lib/connection/pool.js:317:16)
+    at Connection.emit (events.js:182:13)
+    at Socket.<anonymous> (/Users/mpeveler/Github/CISL/crun-server/node_modules/mongodb-core/lib/connection/connection.js:177:49)
+    at Object.onceWrapper (events.js:275:13)
+    at Socket.emit (events.js:182:13)
+    at emitErrorNT (internal/streams/destroy.js:92:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:59:3)
+    at process._tickCallback (internal/process/next_tick.js:174:19)
+  message: 'Ran out of retries trying to reconnect to "localhost:27017". Try setting `server.reconnectTries` and `server.reconnectInterval` to something higher.',
+  name: 'DisconnectedError' }

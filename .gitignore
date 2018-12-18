@@ -34,3 +34,4 @@ node_modules
 
 # Settings file
 settings.js
+cog.json
