@@ -1,4 +1,0 @@
-module.exports = {
-  "db": "localhost",
-  "port": "7777"
-}

@@ -1,23 +1,24 @@
-var
-  http = require('http'),
-  mongoose = require('mongoose'),
-  settings = require('./settings'),
-  express = require('express'),
-  cookieParser = require('cookie-parser'),
-  bodyParser = require('body-parser'),
-  session = require('express-session');
+#!/usr/bin/env node
 
+const http = require('http');
+const mongoose = require('mongoose');
+const settings = require('./cog');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+let io = require('./socket/io');
 
 // Connect to the database.
 mongoose.Promise = global.Promise;
-mongoose.connect(settings.db);
+mongoose.connect(settings.mongo.host || 'localhost');
 mongoose.connection.on('error', function(err) {
   console.error('MongoDB connection error.');
   console.error(err);
 });
 
 // Session
-var sessionMiddleware = session({
+let sessionMiddleware = session({
   key: 'express.sid',
   secret: 'secret',
   saveUninitialized: true,
@@ -25,7 +26,7 @@ var sessionMiddleware = session({
 });
 
 // App
-var app = express();
+let app = express();
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(sessionMiddleware);
@@ -36,11 +37,12 @@ app.use('/api/machine', require('./apis/machine'));
 app.use('/', express.static('public'));
 
 // Server
-var server = http.Server(app);
-server.listen(settings.port);
+let server = http.Server(app);
+server.listen(settings.port, () => {
+  console.log(`Running crun-server on port ${settings.port}`);
+});
 
 // Start socket manager
-var io = require('./socket/io');
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
