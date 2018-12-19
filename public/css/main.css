@@ -236,7 +236,7 @@ body {
     height: 135px;
     white-space: pre-wrap;
     overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-x: scroll;
     scrollbar-base-color: pink;
     scrollbar-arrow-color:purple;
 }
