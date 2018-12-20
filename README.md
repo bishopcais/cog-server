@@ -1,8 +1,8 @@
 # Central Watcher Server for crun
 
 Docker:
-`docker build -t cisl/crun-server:latest`
-`docker run --name crun-server cisl/crun-server:latest`
+`docker build -t cisl/crun-server:latest`  
+`docker run --name crun-server cisl/crun-server:latest`  
 `docker exec crun-server node /srv/scripts/create-admin.js`
 
 Step 1: Install npm libraries
