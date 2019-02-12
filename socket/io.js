@@ -1,63 +1,82 @@
-"use strict"
+'use script';
 
-var
-  querystring = require('querystring'),
-  _ = require('lodash'),
+const _ = require('lodash');
 
-  User = require('../models/user'),
-  Machine = require('../models/machine'),
-  http = require('http'),
-  io = require('socket.io')(http),
-  uiio = io.of('/ui'),
-  runnerio = io.of('/runner'),
+const User = require('../models/user');
+const Machine = require('../models/machine');
+const http = require('http');
+const io = require('socket.io')(http);
+const uiio = io.of('/ui');
+const runnerio = io.of('/runner');
 
-  register = {},
-  listeners = {};
-
+let register = {};
+let listeners = {};
 
 // Runner authentication and registry.
 runnerio.use(function(socket, next) {
+  let info;
   try {
-    var info = JSON.parse(socket.handshake.query.info);
-  } catch(e) {
-    return next(new Error('Cannot parse info for authentication.'))
+    info = JSON.parse(socket.handshake.query.info);
+  }
+  catch (e) {
+    next(new Error('Cannot parse info for authentication.'));
+    return;
   }
 
-  if (!info.username)
-    return next(new Error('Username is not provided.'));
+  if (!info.username) {
+    next(new Error('Username is not provided.'));
+    return;
+  }
 
-  if (!info.key)
-    return next(new Error('Secret key is missing.'));
+  if (!info.key) {
+    next(new Error('Secret key is missing.'));
+    return;
+  }
 
   User.findOne({ username: info.username }).exec((err, user) => {
-    if (err)
-      return next(new Error('DB error -'+ err));
+    if (err) {
+      next(new Error(`DB error - ${err}`));
+      return;
+    }
 
-    if (!user)
-      return next(new Error('User with that username not found.'));
+    if (!user) {
+      next(new Error('User with that username not found.'));
+      return;
+    }
 
     // Authorization
-    var key = _.find(user.keys, { key: info.key });
-    if (!key)
-      return next(new Error('Invalid secret API key.'));
+    let key = _.find(user.keys, { key: info.key });
+    if (!key) {
+      next(new Error('Invalid secret API key.'));
+      return;
+    }
 
     Machine.findOneByMac(info, (err, machine) => {
-      if (err)
-        return next(err);
+      if (err) {
+        next(err);
+        return;
+      }
 
       function cb(err, machine) {
-        if (err)
-          return next(err);
+        if (err) {
+          next(err);
+          return;
+        }
         socket.machine = machine;
         uiio.emit('a machine', machine.toJSON());
         next();
+        return;
       }
 
-      if (!machine)
-        return Machine.create(info, cb)
+      if (!machine) {
+        Machine.create(info, cb);
+        return;
+      }
 
-      if (register[machine._id])
-        return next(new Error('The machine is already connected.'));
+      if (register[machine._id]) {
+        next(new Error('The machine is already connected.'));
+        return;
+      }
 
       machine.updateInfo(info, cb);
     });
@@ -68,14 +87,17 @@ runnerio.on('connection', (socket) => {
   register[socket.machine._id] = socket;
 
   socket.on('disconnect', () => {
-    if (!socket.machine) return;
+    if (!socket.machine) {
+      return;
+    }
     delete register[socket.machine._id];
 
     socket.machine.connected = false;
     socket.machine.lastDisconnected = new Date();
     socket.machine.save((err, machine) => {
-      if (!err) 
+      if (!err) {
         uiio.emit('a machine', machine.toJSON());
+      }
     });
     delete socket.machine;
   });
@@ -84,13 +106,15 @@ runnerio.on('connection', (socket) => {
     socket.machine.updateCog(c, (err, machine) => {
       if (err) {
         console.log(err);
-        return socket.emit('u cog error', 'Database error.');
+        socket.emit('u cog error', 'Database error.');
+        return;
       }
       else if (c.id == undefined) {
-        console.error(`ERROR: id for ${JSON.stringify(c. null, 2)} is undefined.`);
-        return socket.emit('u cog error', 'cog id error.');
+        console.error(`ERROR: id for ${JSON.stringify(c, null, 2)} is undefined.`);
+        socket.emit('u cog error', 'cog id error.');
+        return;
       }
-      var cog = _.find(machine.cogs, { id: c.id }).toJSON();
+      let cog = _.find(machine.cogs, { id: c.id }).toJSON();
       cog.machineId = machine._id;
       socket.emit('u cog success');
       uiio.emit('a cog', cog);
@@ -101,10 +125,11 @@ runnerio.on('connection', (socket) => {
     socket.machine.updateCogs(cs, (err, machine) => {
       if (err) {
         console.log(err);
-        return socket.emit('u cogs error', 'Database error.');
+        socket.emit('u cogs error', 'Database error.');
+        return;
       }
-      var cogs = machine.toJSON().cogs;
-      cogs.forEach((c) => { c.machineId = machine._id });
+      let cogs = machine.toJSON().cogs;
+      cogs.forEach((c) => { c.machineId = machine._id; });
       socket.emit('u cogs success');
       uiio.emit('a cogs', machine.cogs);
     });
@@ -113,8 +138,8 @@ runnerio.on('connection', (socket) => {
   socket.on('r cog', (c) => {
     socket.machine.removeCog(c, (err, machine) => {
       if (err) {
-        console.log(err);
-        return socket.emit('r cog error', 'Database error.');
+        socket.emit('r cog error', 'Database error.');
+        return;
       }
       socket.emit('r cog success');
       c.machineId = machine._id;
@@ -123,76 +148,97 @@ runnerio.on('connection', (socket) => {
   });
 
   socket.on('stream', (o) => {
-    var cid = o.cogId;
-    var mid = o.machineId = socket.machine._id;
-    if (!cid) return;
-    var ls = (listeners[mid] || {})[cid];
+    let cid = o.cogId;
+    let mid = o.machineId = socket.machine._id;
+    if (!cid) {
+      return;
+    }
+    let ls = (listeners[mid] || {})[cid];
 
-    if (!ls) return;
-    ls.forEach((l)=>{ l.emit('stream', o); });
+    if (!ls) {
+      return;
+    }
+    ls.forEach((l) => { l.emit('stream', o); });
   });
 
   socket.on('stat', (o) => {
-    var cid = o.cogId;
-    var mid = o.machineId = socket.machine._id;
-    if (!cid) return;
-    var ls = (listeners[mid] || {})[cid];
+    let cid = o.cogId;
+    let mid = o.machineId = socket.machine._id;
+    if (!cid) {
+      return;
+    }
+    let ls = (listeners[mid] || {})[cid];
 
-    if (!ls) return;
-    ls.forEach((l)=>{ l.emit('stat', o); });
+    if (!ls) {
+      return;
+    }
+    ls.forEach((l) => { l.emit('stat', o); });
   });
 });
 
 // GUI Authentication.
 uiio.use(function(socket, next) {
-  var username = socket.request.session.username;
-  if (!username)
-    return next(new Error('User is not logged in.'));
+  let username = socket.request.session.username;
+  if (!username) {
+    next(new Error('User is not logged in.'));
+    return;
+  }
 
   User.findOne({ username: username, isAdmin: true }).exec((err, user) => {
-    if (err)
-      return next(new Error('Authenticated user is not found.'));
+    if (err) {
+      next(new Error('Authenticated user is not found.'));
+      return;
+    }
 
     socket.user = user;
     next();
   });
 });
 
-
 uiio.on('connection', (socket) => {
-  var addedTo = {};
+  let addedTo = {};
 
   socket.on('q machines', (filters) => {
     Machine.find(filters || {}, (err, machines) => {
+      if (err) {
+        socket.emit('a machines error');
+        return;
+      }
       socket.emit('a machines', _.map(machines, (m) => { return m.toJSON(); }));
     });
   });
 
   socket.on('action', (action) => {
-    var mid = action.machineId;
-    var cid = action.cogId;
+    let mid = action.machineId;
+    let cid = action.cogId;
 
-    var rs = register[mid];
-    if (!rs) return socket.emit('action error', 'Not registered.');
+    let rs = register[mid];
+    if (!rs) {
+      socket.emit('action error', 'Not registered.');
+      return;
+    }
 
-    var m = listeners[mid] = listeners[mid] || {};
-    var c = m[cid] = m[cid] || new Set;
+    let m = listeners[mid] = listeners[mid] || {};
+    let c = m[cid] = m[cid] || new Set();
 
     // Stream forwarding.
-    if (action.action == 'watch') {
-      if (action.watching == true) {
+    if (action.action === 'watch') {
+      if (action.watching) {
         c.add(socket);
 
-        addedTo[mid] = addedTo[mid] || {}
+        addedTo[mid] = addedTo[mid] || {};
         addedTo[mid][cid] = true;
-      } else {
+      }
+      else {
         c.delete(socket);
 
         addedTo[mid] = addedTo[mid] || {};
         delete addedTo[mid][cid];
 
         // Don't unwatch if there are others watching.
-        if (c.size > 0) return;
+        if (c.size > 0) {
+          return;
+        }
       }
     }
 
@@ -202,7 +248,7 @@ uiio.on('connection', (socket) => {
         streams.forEach((s) => {
           s.machineId = mid;
           s.cogId = cid;
-          socket.emit('stream', s)
+          socket.emit('stream', s);
         });
       });
     }
@@ -213,22 +259,32 @@ uiio.on('connection', (socket) => {
   // User control.
   socket.on('q users', (filters) => {
     User.find(filters || {}, (err, users) => {
+      if (err) {
+        socket.emit('u user error');
+        return;
+      }
       socket.emit('a users', _.map(users, (u) => { return u.toJSON(); }));
     });
   });
 
   socket.on('u user', (u) => {
     User.createOrUpdate(u, (err, user) => {
-      if (err) return socket.emit('u user error');
-      
+      if (err) {
+        socket.emit('u user error');
+        return;
+      }
+
       socket.emit('u user success');
       uiio.emit('a user', user.toJSON());
-    })
+    });
   });
 
   socket.on('d user', (u) => {
     User.findOne({ username: u.username }).remove((err) => {
-      if (err) return socket.emit('d user error');
+      if (err) {
+        socket.emit('d user error');
+        return;
+      }
 
       socket.emit('d user success', u);
       uiio.emit('d user', u);
@@ -237,24 +293,26 @@ uiio.on('connection', (socket) => {
 
   // Stop stream forwarding.
   socket.on('disconnect', () => {
-    var k, l, m;
-    for (k in addedTo) {
-      for (l in addedTo[k]) {
-        var m = (listeners[k] || {})[l];
-        if (m) m.delete(socket);
+    for (let k in addedTo) {
+      for (let l in addedTo[k]) {
+        let m = (listeners[k] || {})[l];
+        if (m) {
+          m.delete(socket);
+        }
 
         delete addedTo[k][l];
 
-        if (m.size == 0 && register[k])
+        if (m.size === 0 && register[k]) {
           register[k].emit('action', {
             'action': 'watch',
             'watching': false,
             'cogId': l
           });
+        }
       }
     }
   });
 });
 
-Machine.update({}, { $set: { connected: false } }, { multi: true }, ()=>{ });
+Machine.updateMany({}, { $set: { connected: false } }, { multi: true }, () => { });
 module.exports = io;

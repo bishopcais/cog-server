@@ -1,6 +1,4 @@
 {
   "port": 7777,
-  "mongo": {
-    "host": "localhost"
-  }
+  "mongo": true
 }

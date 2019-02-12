@@ -1,12 +1,7 @@
-var
-  _ = require('lodash'),
-  mongoose = require('mongoose');
-mongoose.Promise = Promise;
+const _ = require('lodash');
+const celio = require('@cisl/celio');
 
-var User = require('./user');
-
-
-var CogSchema = new mongoose.Schema({
+const CogSchema = new celio.mongo.mongoose.Schema({
   id: { type: String, index: true},
   type: String,
   tags: [String],
@@ -24,7 +19,7 @@ var CogSchema = new mongoose.Schema({
   exitCode: Number
 });
 
-var MachineSchema = new mongoose.Schema({
+const MachineSchema = new celio.mongo.mongoose.Schema({
   connected: Boolean,
   lastConnected: Date,
   lastDisconnected: Date,
@@ -46,30 +41,32 @@ var MachineSchema = new mongoose.Schema({
   cpus: [{ model: String, speed: Number}],
   memory: Number,
 
-  cogs: [CogSchema],
+  cogs: [CogSchema]
 });
 
 MachineSchema.statics.findOneByMac = function(info, next) {
-  var aMac = info.interfaces && info.interfaces[0] && info.interfaces[0].mac;
-  if (!aMac)
-    return next(`Error. I can haz mac address.`);
+  let aMac = info.interfaces && info.interfaces[0] && info.interfaces[0].mac;
+  if (!aMac) {
+    next(`Error. I can haz mac address.`);
+    return;
+  }
 
   this.findOne({
     username: info.username,
     interfaces: { $elemMatch: { mac: aMac } }
   }).exec(next);
-}
+};
 
 MachineSchema.statics.create = function(info, next) {
-  var Machine = this;
-  machine = new Machine(info);
+  let Machine = this;
+  let machine = new Machine(info);
   machine.connected = true;
   machine.lastConnected = new Date();
   machine.save(next);
-}
+};
 
 MachineSchema.methods.updateInfo = function(info, next) {
-  var machine = this;
+  let machine = this;
   machine.platform = info.platform;
   machine.user = info.user;
   machine.pid = info.pid;
@@ -81,12 +78,12 @@ MachineSchema.methods.updateInfo = function(info, next) {
   machine.connected = true;
   machine.lastConnected = new Date();
   machine.save(next);
-}
+};
 
 MachineSchema.methods.updateCog = function(c, next) {
-  var machine = this;
+  let machine = this;
 
-  var cog = _.find(machine.cogs, { id: c.id });
+  let cog = _.find(machine.cogs, { id: c.id });
   if (!cog) { // Create
     machine.cogs.push(c);
     return machine.save(next);
@@ -94,24 +91,26 @@ MachineSchema.methods.updateCog = function(c, next) {
 
   // Update
   _.each([
-    'type', 'tags',  'description', 'pid', 'host', 'port',
+    'type', 'tags', 'description', 'pid', 'host', 'port',
     'run', 'args', 'status', 'exitCode', 'cwd'
   ], (k) => {
     if (c[k]) cog[k] = c[k];
   });
   return machine.save(next);
-}
+};
 
 MachineSchema.methods.removeCog = function(c, next) {
-  var cog = _.find(this.cogs, { id: c.id });
-  if (!cog) return next('Cog not found.');
+  let cog = _.find(this.cogs, { id: c.id });
+  if (!cog) {
+    return next('Cog not found.');
+  }
   cog.remove();
   return this.save(next);
-}
+};
 
 MachineSchema.methods.updateCogs = function(cs, next) {
   this.cogs = cs;
   return this.save(next);
-}
+};
 
-module.exports = mongoose.model('Machine', MachineSchema);
+module.exports = celio.mongo.mongoose.model('Machine', MachineSchema);

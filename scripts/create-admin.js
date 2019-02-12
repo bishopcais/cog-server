@@ -1,16 +1,6 @@
-var mongoose = require('mongoose');
-mongoose.Promise = Promise;
+const User = require('../models/user');
 
-var settings = require('../settings'),
-    User = require('../models/user');
-
-
-// Creates an admin user with username 'admin', and password 'password'
-console.log('Connecting...')
-
-mongoose.connect(settings.db)
-
-var user = new User({
+let user = new User({
   username: 'admin',
   password: 'password',
   name: 'Admin',
@@ -18,18 +8,23 @@ var user = new User({
   isAdmin: true,
   keys: [
     {
-      key: "key"
+      key: 'key'
     }
   ]
 });
+
+console.log(`Creating new user 'admin'`);
 user.save(function(err) {
   if (err) {
-    if (err['name'] == 'MongoError' && err['code'] == 11000) {
-      console.log('admin already exists');
+    if (err['name'] === 'MongoError' && err['code'] == 11000) {
+      console.warn('  admin already exists');
     }
     else {
-      console.log('Error creating admin: ', err);
+      console.error('  Error creating admin: ', err);
     }
+  }
+  else {
+    console.log('  done');
   }
   process.exit();
 });
