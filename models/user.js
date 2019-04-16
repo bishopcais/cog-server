@@ -1,9 +1,15 @@
+<<<<<<< HEAD
 var _ = require('lodash');
 var mongoose = require('mongoose');
 mongoose.Promise = Promise;
 var bcrypt = require('bcrypt-nodejs');
+=======
+const _ = require('lodash');
+const celio = require('@cisl/celio');
+const bcrypt = require('bcrypt');
+>>>>>>> develop
 
-var UserSchema = new mongoose.Schema({
+const UserSchema = new celio.mongo.mongoose.Schema({
   username: { type: String, unique: true, lowercase: true },
   password: { type: String },
   keys: [{
@@ -25,41 +31,48 @@ UserSchema.methods.getJSON = function() {
 
 UserSchema.pre('save', function(next) {
   if (this.isModified('password')) {
-    var pw = bcrypt.hashSync(this.get('password'), bcrypt.genSaltSync())
+    let pw = bcrypt.hashSync(this.get('password'), bcrypt.genSaltSync());
     this.set('password', pw);
   }
   next();
 });
 
-
 UserSchema.statics.createOrUpdate = function(u, next) {
-  var User = this;
+  let User = this;
 
   User.findOne({ username: u.username }).exec((err, user) => {
-    if (err) return next(err);
-    if (!user){
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
       user = new User(u);
-    } else {
+    }
+    else {
       _.each(['username', 'name', 'password', 'email', 'isAdmin', 'keys'], (k) => {
-        if (u[k]) user[k] = u[k];
+        if (u[k]) {
+          user[k] = u[k];
+        }
       });
     }
-    user.save(next);
+    return user.save(next);
   });
-
-}
+};
 
 UserSchema.statics.authenticate = function(creds, cb) {
-  var User = this;
+  this.findOne({ username: creds.username }).exec((err, user) => {
+    if (err) {
+      return cb('Database error.');
+    }
+    if (!user) {
+      return cb('User not found');
+    }
 
-  User.findOne({ username: creds.username }).exec( (err, user) => {
-    if (err) return cb('Database error.');
-    if (!user) return cb('User not found');
-
-    var match = bcrypt.compareSync(creds.password, user.password);
-    if (!match) return cb('Passwords don\'t match');
+    let match = bcrypt.compareSync(creds.password, user.password);
+    if (!match) {
+      return cb('Passwords don\'t match');
+    }
     return cb(null, user);
   });
 };
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = celio.mongo.mongoose.model('User', UserSchema);

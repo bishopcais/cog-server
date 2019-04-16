@@ -1,6 +1,10 @@
 {
   "port": 7777,
+<<<<<<< HEAD
   "mongo": {
     "host": "localhost"
   }
+=======
+  "mongo": true
+>>>>>>> develop
 }

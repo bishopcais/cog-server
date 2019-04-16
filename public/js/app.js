@@ -1,3 +1,5 @@
+const ansi_up = new AnsiUp();
+
 var
   socket = io('/ui', { autoConnect: false }),
   navTemplate = _.template($('#nav-template').html()),
@@ -6,7 +8,6 @@ var
   cogInfoTemplate = _.template($('#cog-info-template').html()),
   cogButtonsTemplate = _.template($('#cog-buttons-template').html()),
   modalTemplate = _.template($('#cog-modal-template').html());
-
 
 var View = Backbone.View.extend({
   initialize: function() {
@@ -162,9 +163,10 @@ var View = Backbone.View.extend({
       '"] [data-container="screen"]'
     );
 
+    let data = ansi_up.ansi_to_html(o.data);
     var txt = (o.type == 'stderr') ? 
-      '<span class="error">' + o.data + '</span>':
-      '<span class="">' + o.data + '</span>';
+      '<span class="error">' + data + '</span>':
+      '<span class="">' + data + '</span>';
 
     el.append(txt);
     if (el.children().length > 20)
