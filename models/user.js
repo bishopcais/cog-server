@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-var _ = require('lodash');
-var mongoose = require('mongoose');
-mongoose.Promise = Promise;
-var bcrypt = require('bcrypt-nodejs');
-=======
 const _ = require('lodash');
 const celio = require('@cisl/celio');
 const bcrypt = require('bcrypt');
->>>>>>> develop
 
 const UserSchema = new celio.mongo.mongoose.Schema({
   username: { type: String, unique: true, lowercase: true },
