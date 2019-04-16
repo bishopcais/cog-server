@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@cisl/celio": "^3.0.0",
-    "@cisl/cir-express": "^1.0.0",
+    "@cisl/cais-express": "^1.1.0",
     "bcrypt": "^3.0.3",
     "cookie": "^0.3.1",
     "express-session": "^1.15.6",

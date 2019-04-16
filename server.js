@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const http = require('http');
-const app = require('@cisl/cir-express');
+const app = require('@cisl/cais-express');
 const session = require('express-session');
 let io = require('./socket/io');
 

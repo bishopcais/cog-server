@@ -231,6 +231,7 @@ body {
 }
 .machine-container .more .screen {
     background: #000;
+    color: rgb(167, 167, 167);
     padding: 10px;
     margin-bottom: 15px;
     height: 135px;

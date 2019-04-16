@@ -3,6 +3,9 @@ const _ = require('lodash');
 
 module.exports = function(req, res) {
   let query = req.query ? _.cloneDeep(req.query) : {};
+  if (query.connected) {
+    query.connected = query.connected === 'true';
+  }
   let args = [];
 
   if (query['$unwind']) {
