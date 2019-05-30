@@ -15,7 +15,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@cisl/celio": "^3.0.0",
+    "@cisl/celio": "^3.0.1",
     "@cisl/cais-express": "^1.1.0",
     "bcrypt": "^3.0.3",
     "cookie": "^0.3.1",
