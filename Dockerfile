@@ -12,22 +12,23 @@ RUN apk add --virtual build-dependencies --no-cache \
     && adduser -S cisl -G cisl \
     && chown cisl:cisl -R /srv
 
-COPY .npmrc /home/cisl/.npmrc
-
 USER cisl
+COPY .npmrc /home/cisl/.npmrc
 
 RUN npm install
 
 USER root
 
-RUN apk del build-dependencies \
-    && rm -f /home/cisl/.npmrc
+RUN apk del build-dependencies
 
 USER cisl
 # We assume that you've installed the node_modules already
 # before attempting to build this image
-RUN mv /srv/cog.sample.json /srv/cog.json
+RUN rm -f /home/cisl/.npmrc && \
+    mv /srv/.docker/cog.json /srv/cog.json && \
+    mv /srv/.docker/init.sh /srv/init.sh && \
+    chmod +x init.sh
 
-# ENTRYPOINT [ "node", "/srv/scripts/create-admin.js" ]
 EXPOSE 7777
-CMD [ "node", "/srv/server.js" ]
+
+ENTRYPOINT [ "./init.sh" ]

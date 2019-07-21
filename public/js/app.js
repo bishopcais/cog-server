@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 const ansi_up = new AnsiUp();
 
 var
@@ -42,6 +43,7 @@ var View = Backbone.View.extend({
 
   renderMachines: function(machines) {
     machines.forEach(this.renderMachine.bind(this));
+    
   },
 
   renderMachine: function(machine) {
@@ -65,12 +67,24 @@ var View = Backbone.View.extend({
     
     this.renderCogs(machine.cogs);
     mEl.find('[data-toggle="tooltip"]').tooltip();
+
+    /*
+    This gets reset anytime cog status changes
+    let dropdown_button = mEl.find('.button-dropdown').first();
+    mEl.find('.dropdown-menu').children().each(function() {
+      $(this).on('click', function() {
+        let elem = $(this).children()[0];
+        dropdown_button.attr('data-action', elem.textContent);
+        dropdown_button.html(elem.innerHTML);
+      });
+    });
+    */
   },
 
   renderCogs: function(cogs) {
     cogs.forEach(function(cog) {
       view.renderCog(cog);
-    });    
+    });
   },
 
   renderCog: function(cog) {
@@ -134,25 +148,18 @@ var View = Backbone.View.extend({
         cogId: cogId,
         machineId: machineId
       });
-
-    } else if (action == 'stop') {
-      socket.emit('action', {
-        action: 'stop',
-        cogId: cogId,
-        machineId: machineId
-      });
-    } else if (action == 'run') {
-      socket.emit('action', {
-        action: 'run',
-        cogId: cogId,
-        machineId: machineId
-      }, action);
     } else if (action == 'clear') {
       this.$(
         '[data-cog-id="' + cogId + 
         '"][data-machine-id="' + machineId + 
         '"] [data-container="screen"]'
       ).empty();
+    } else {
+      socket.emit('action', {
+        action: action.toLowerCase(),
+        cogId: cogId,
+        machineId: machineId
+      });
     }
   },
 
@@ -280,5 +287,5 @@ $.ajax({
       authEl.removeClass('hidden');
     }
   },
-  error: function() { alert('Can\'t reach aip')  },
+  error: function() { alert('Can\'t reach aip') },
 });

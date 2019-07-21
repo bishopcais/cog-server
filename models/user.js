@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const celio = require('@cisl/celio');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new celio.mongo.mongoose.Schema({
   username: { type: String, unique: true, lowercase: true },

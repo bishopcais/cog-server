@@ -7,7 +7,7 @@ const CogSchema = new celio.mongo.mongoose.Schema({
   tags: [String],
   description: String,
 
-  pid: String,
+  pid: Number,
   host: String,
   port: String,
 

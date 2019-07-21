@@ -29,6 +29,7 @@ node_modules
 
 # Optional npm cache directory
 .npm
+.npmrc
 
 # Optional REPL history
 .node_repl_history
@@ -36,3 +37,4 @@ node_modules
 # Settings file
 settings.js
 cog.json
+!.docker/cog.json

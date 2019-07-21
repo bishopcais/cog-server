@@ -1,2 +1,4 @@
+.git
 node_modules
-crun-server.log
+*.log
+*.error

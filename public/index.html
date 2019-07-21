@@ -3,7 +3,7 @@
 <head>
   <title>Cog Watch</title>
   <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/fontawesome/all.min.css">
   <link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 <body>
@@ -14,7 +14,7 @@
       <%= username %>
     </div>
     <a href="/users" class="button logout">
-      <i class="fa fa-users"></i>
+      <i class="fas fa-users"></i>
       Users
     </a>
 <!--     <button class="button">
@@ -23,7 +23,7 @@
     </button>
  -->
     <button class="button" data-action="logout">
-      <i class="fa fa-sign-out"></i>
+      <i class="fas fa-sign-out-alt"></i>
       Logout
     </button>
   </script>
@@ -43,22 +43,22 @@
   </div>
 
   <div class="no-service-icon">
-    <i class="fa fa-unlink"></i>
+    <i class="fas fa-unlink"></i>
   </div>
 
   <script type="text/template" id="machine-template">
     <div class="machine-watcher">
-      <i class="fa fa-laptop"></i>
+      <i class="fas fa-laptop"></i>
     </div>
 
     <% if (machine.connected == true) { %>
     <div class="connected">
-      <span class="key"><i class="fa fa-link"></i></span>
+      <span class="key"><i class="fas fa-link"></i></span>
       <%= moment(machine.lastConnected).format('MM/DD/YY hh:MMa') %>
     </div>
     <% } else { %>
     <div class="disconnected">
-      <span class="key"><i class="fa fa-unlink"></i> </span>
+      <span class="key"><i class="fas fa-unlink"></i> </span>
       <%= moment(machine.lastDisconnected).format('MM/DD/YY hh:MMa') %>
     </div>
     <% } %>
@@ -121,6 +121,40 @@
         <span class="tag"> <%= tag %></span>
       <% }) %>
     </div>
+
+    <div class="buttons">
+      <% if (cog.status == 'exit') { %>
+        <div class="button run" data-action="run">
+          <i class="fas fa-play"></i>
+          run
+        </div>
+      <% } else { %>
+        <div class="button stop" data-action="stop">
+          <i class="fas fa-stop"></i>
+          Stop
+        </div>
+      <% } %>
+
+      <div class="button" data-action="sighup">
+        <i class="fas fa-phone-slash"></i> SIGHUP
+      </div>
+      <div class="button" data-action="sigusr1">
+        <i class="fas fa-wave-square"></i> SIGUSR1
+      </div>
+      <!--
+      <div class="btn-group">
+        <button type="button" class="button-dropdown" data-action='SIGHUP'><i class="fas fa-phone-slash"></i> SIGHUP</button>
+        <button type="button" class="button dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a><i class="fas fa-wave-square"></i> SIGUSR1</a></li>
+          <li><a><i class="fas fa-signature"></i> SIGUSR2</a></li>
+        </ul>
+      </div>
+      -->
+    </div>
   </script>
 
   <script type="text/template" id="cog-buttons-template">
@@ -129,17 +163,6 @@
     </div>
 
     <div class="buttons">
-      <% if (cog.status == 'exit') { %>
-      <div class="button run" data-action="run">
-        <i class="fa fa-play"></i>
-        run
-      </div>
-      <% } else { %>
-      <div class="button stop" data-action="stop">
-        <i class="fa fa-stop"></i>
-        Stop
-      </div>
-      <% } %>
       <div class="button clear" data-action="clear">
         <i class="fa fa-eraser"></i>
         Clear
@@ -149,15 +172,15 @@
 
   <script type="text/template" id="cog-template">
     <div class="cog-watcher">
-      <i class="fa fa-cog"></i>
+      <i class="fas fa-cog"></i>
     </div>
     <div data-container="info">
     </div>
 
     <div class="toggle-container">
       <div class="toggle-button" data-action="expand">
-        <i class="fa fa-angle-down"></i>
-        <i class="fa fa-angle-up"></i>
+        <i class="fas fa-angle-down"></i>
+        <i class="fas fa-angle-up"></i>
       </div>
     </div>
 

@@ -13,18 +13,20 @@ let user = new User({
   ]
 });
 
-console.log(`Creating new user 'admin'`);
+console.log(`Creating/Verifying user 'admin':`);
 user.save(function(err) {
+  let exit_code = 0;
   if (err) {
-    if (err['name'] === 'MongoError' && err['code'] == 11000) {
-      console.warn('  admin already exists');
+    if (err['name'] === 'MongoError' && err['code'] === 11000) {
+      console.log('>  verified');
     }
     else {
       console.error('  Error creating admin: ', err);
+      exit_code = -1;
     }
   }
   else {
-    console.log('  done');
+    console.log('>  created');
   }
-  process.exit();
+  process.exit(exit_code);
 });

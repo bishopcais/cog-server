@@ -183,6 +183,43 @@ body {
     color: red;
 }
 
+.machine-container .buttons {
+    margin-bottom: 10px;
+}
+
+.machine-container .button {
+    display: inline-block;
+    color: #000;
+    background-color: #626262;
+    padding: 4px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-right: 5px;
+    border: 0px;
+}
+
+.machine-container .button-dropdown {
+    display: inline-block;
+    color: #000;
+    background-color: #626262;
+    padding: 4px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    border: 0px; 
+    margin-right: -7px;
+}
+
+.machine-container .dropdown-menu {
+    color: #000;
+    background-color: #626262;
+    text-transform: uppercase;
+    top: 101%;
+    min-width: 135px;
+}
+
+.machine-container .dropdown-menu > li > a {
+    color: #000;
+}
 
 .machine-container .toggle-container {
     position: absolute;
@@ -217,18 +254,7 @@ body {
 .machine-container .more.expanded {
     display: block;
 }
-.machine-container .more .buttons {
-    margin-bottom: 10px;
-}
-.machine-container .more .button {
-    display: inline-block;
-    color: #000;
-    background-color: #626262;
-    padding: 4px 12px;
-    cursor: pointer;
-    text-transform: uppercase;
-    margin-right: 5px;
-}
+
 .machine-container .more .screen {
     background: #000;
     color: rgb(167, 167, 167);
