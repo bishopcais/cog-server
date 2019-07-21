@@ -8,3 +8,5 @@
 * Properly handle error if crun-cli passes cog without an id
 * Add docker-compose.yml for running crun-server
 * Record PID for running cogs as number
+* Move Start/Stop button out of expanded view for cog
+* Add button for sending SIGHUP and SIGUSR1
