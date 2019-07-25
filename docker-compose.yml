@@ -11,6 +11,7 @@ services:
 
   database:
     image: mongo:4
+    restart: always
     volumes:
       - mongo:/data/db
 
