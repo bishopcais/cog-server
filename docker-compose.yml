@@ -8,14 +8,10 @@ services:
       - database
     ports:
       - 7777:7777
-    volumes:
-      - ./server.js:/srv/server.js
-      - ./public:/srv/public
-      - ./scripts:/srv/scripts
-      - ./node_modules:/srv/node_modules
 
   database:
     image: mongo:4
+    restart: always
     volumes:
       - mongo:/data/db
 
