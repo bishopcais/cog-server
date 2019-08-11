@@ -1,19 +1,20 @@
 FROM node:10-alpine
 
-COPY . /srv
+RUN addgroup -S cisl && adduser -S cisl -G cisl
+COPY . /home/cisl/server
+COPY .npmrc /home/cisl/.npmrc
 
-WORKDIR /srv
+WORKDIR /home/cisl/server
 
 RUN apk add --virtual build-dependencies --no-cache \
         g++ \
         make \
         python \
-    && addgroup -S cisl \
-    && adduser -S cisl -G cisl \
-    && chown cisl:cisl -R /srv
+    && chown cisl:cisl -R /home/cisl/server \
+    && chown cisl:cisl /home/cisl/.npmrc \
+    && npm install -g npm
 
 USER cisl
-COPY .npmrc /home/cisl/.npmrc
 
 RUN npm install
 
@@ -25,10 +26,10 @@ USER cisl
 # We assume that you've installed the node_modules already
 # before attempting to build this image
 RUN rm -f /home/cisl/.npmrc && \
-    mv /srv/.docker/cog.json /srv/cog.json && \
-    mv /srv/.docker/init.sh /srv/init.sh && \
-    chmod +x init.sh
+    mv /home/cisl/server/.docker/cog.json /home/cisl/server/cog.json && \
+    mv /home/cisl/server/.docker/init.sh /home/cisl/server/init.sh && \
+    chmod +x /home/cisl/server/init.sh
 
 EXPOSE 7777
 
-ENTRYPOINT [ "./init.sh" ]
+ENTRYPOINT [ "/home/cisl/server/init.sh" ]

@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 const http = require('http');
-const app = require('@cisl/express');
-const express = require('express');
+const express = require('@cisl/express');
 const session = require('express-session');
 const path = require('path');
 let io = require('./socket/io');
+
+const app = express({socketio: false});
 
 // Session
 let sessionMiddleware = session({
@@ -31,11 +32,7 @@ app.use(
 );
 
 // Server
-let server = http.Server(app);
-
-server.listen(app.get('port'), () => {
-  console.log(`Running crun-server on port ${app.get('port')}`);
-});
+let server = app.listen();
 
 // Start socket manager
 io.use(function(socket, next) {

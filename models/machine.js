@@ -1,7 +1,7 @@
 const _ = require('lodash');
-const celio = require('@cisl/celio');
+const io = require('@cisl/io');
 
-const CogSchema = new celio.mongo.mongoose.Schema({
+const CogSchema = new io.mongo.mongoose.Schema({
   id: { type: String, index: true},
   type: String,
   tags: [String],
@@ -19,7 +19,7 @@ const CogSchema = new celio.mongo.mongoose.Schema({
   exitCode: Number
 });
 
-const MachineSchema = new celio.mongo.mongoose.Schema({
+const MachineSchema = new io.mongo.mongoose.Schema({
   connected: Boolean,
   lastConnected: Date,
   lastDisconnected: Date,
@@ -113,4 +113,4 @@ MachineSchema.methods.updateCogs = function(cs, next) {
   return this.save(next);
 };
 
-module.exports = celio.mongo.mongoose.model('Machine', MachineSchema);
+module.exports = io.mongo.mongoose.model('Machine', MachineSchema);
