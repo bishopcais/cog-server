@@ -4,7 +4,7 @@
 * Set `restart: always` for all docker-compose.yml containers
 * Move Dockerfile folder for crun-server from `/srv` to `/home/cisl/server`
 * Move from `@cisl/celio` to `@cisl/io@1.0.0-dev4` library
-* Update to `@cisl/express` to `1.0.0-dev2
+* Update to `@cisl/express` to `1.0.0-dev2`
 
 ## v1.3.0
 * Use [ansi_up](https://github.com/drudru/ansi_up#readme) for rendering console output
