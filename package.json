@@ -1,9 +1,9 @@
 {
-  "name": "crun-server",
+  "name": "cog-server",
   "description": "To use it install packages with `npm install`",
   "version": "1.4.0",
   "author": "Ashwin Hamal",
-  "license": "ISC",
+  "license": "MIT",
   "maintainers": [
     {
       "name": "Matthew Peveler",
@@ -15,17 +15,17 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@cisl/io": "1.0.0-dev4",
-    "@cisl/express": "1.0.0-dev2",
+    "@cisl/express": "^1.0.3",
+    "@cisl/io": "^1.0.0-dev.14",
     "@fortawesome/fontawesome-free": "^5.9.0",
     "bcryptjs": "^2.4.3",
-    "cookie": "^0.4.0",
-    "express-session": "^1.16.2",
+    "express-session": "^1.17.1",
     "lodash": "^4.17.15",
-    "node-static": "^0.7.11",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://internal.cisl.rpi.edu/code/cir-core/crun-server"

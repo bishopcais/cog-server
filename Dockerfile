@@ -2,7 +2,6 @@ FROM node:10-alpine
 
 RUN addgroup -S cisl && adduser -S cisl -G cisl
 COPY . /home/cisl/server
-COPY .npmrc /home/cisl/.npmrc
 
 WORKDIR /home/cisl/server
 
