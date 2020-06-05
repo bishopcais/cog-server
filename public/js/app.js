@@ -1,18 +1,15 @@
-// eslint-disable-next-line no-undef
+/* global AnsiUp, _, Backbone, io */
 const ansi_up = new AnsiUp();
 
-var
-  socket = io('/ui', { autoConnect: false }),
-  navTemplate = _.template($('#nav-template').html()),
-  machineTemplate = _.template($('#machine-template').html()),
-  cogTemplate = _.template($('#cog-template').html()),
-  cogInfoTemplate = _.template($('#cog-info-template').html()),
-  cogButtonsTemplate = _.template($('#cog-buttons-template').html()),
-  modalTemplate = _.template($('#cog-modal-template').html());
+const socket = io('/ui', { autoConnect: false });
+const navTemplate = _.template($('#nav-template').html());
+const machineTemplate = _.template($('#machine-template').html());
+const cogTemplate = _.template($('#cog-template').html());
+const cogInfoTemplate = _.template($('#cog-info-template').html());
+const cogButtonsTemplate = _.template($('#cog-buttons-template').html());
 
-var View = Backbone.View.extend({
+const View = Backbone.View.extend({
   initialize: function() {
-    var v = this;
     socket.on('a cog', this.renderCog.bind(this));
     socket.on('a cogs', this.renderCogs.bind(this));
     socket.on('r cog', this.removeCog.bind(this));
@@ -21,15 +18,16 @@ var View = Backbone.View.extend({
     socket.on('stream', this.onStream.bind(this));
     socket.on('stat', this.onStat.bind(this));
   },
-  
+
   load: function() {
     socket.emit('q machines');
   },
 
   getMachineContainer: function(id) {
-    var div = this.$('.machine-container[data-id=' + id + ']');
-    if (div.length)
+    let div = this.$('.machine-container[data-id=' + id + ']');
+    if (div.length) {
       return div;
+    }
     div = $(
       '<div data-id="' + id + '" class="machine-container">' +
         '<div data-container="machine" class="machine"></div>' +
@@ -43,28 +41,27 @@ var View = Backbone.View.extend({
 
   renderMachines: function(machines) {
     machines.forEach(this.renderMachine.bind(this));
-    
   },
 
   renderMachine: function(machine) {
-    var view = this;
-    var mEl = this.getMachineContainer(machine._id);
+    const mEl = this.getMachineContainer(machine._id);
     mEl.find('[data-container="machine"]').html(
-      machineTemplate({ machine : machine })
+      machineTemplate({ machine: machine })
     );
-    if (!machine.connected)
+
+    if (!machine.connected) {
       mEl.addClass('disconnected');
-    else 
+    }
+    else {
       mEl.removeClass('disconnected');
-      
-    mEl
-      .find('[data-container="cogs"]')
-      .html('');
+    }
+
+    mEl.find('[data-container="cogs"]').html('');
 
     machine.cogs.forEach(function(cog) {
       cog.machineId = machine._id;
     });
-    
+
     this.renderCogs(machine.cogs);
     mEl.find('[data-toggle="tooltip"]').tooltip();
 
@@ -88,33 +85,21 @@ var View = Backbone.View.extend({
   },
 
   renderCog: function(cog) {
-    var div = this.$(
-      '[data-cog-_id= ' + cog._id + 
-      '][data-machine-id="' + cog.machineId + '"]'
-    );
+    let div = this.$(`[data-cog-_id="${cog._id}"][data-machine-id="${cog.machineId}"]`);
     if (!div.length) {
       div = $(
-        '<div class="cog" data-cog-_id="' + cog._id + 
-        '" data-cog-id="' + cog.id + '"' +
-        '" data-machine-id="' + cog.machineId + '">'
+        `<div class="cog" data-cog-_id="${cog._id}" data-cog-id="${cog.id}" data-machine-id="${cog.machineId}">`
       );
-      this
-        .getMachineContainer(cog.machineId)
-        .find('[data-container="cogs"]')
-        .append(div);
-      div.html( cogTemplate({ cog: cog }) );
+      this.getMachineContainer(cog.machineId).find('[data-container="cogs"]').append(div);
+      div.html(cogTemplate({ cog: cog }));
     }
 
-    div.find('[data-container="info"]').html( cogInfoTemplate({ cog: cog }) );
-    div.find('[data-container="buttons"]').html( cogButtonsTemplate({ cog: cog }) );
-
+    div.find('[data-container="info"]').html(cogInfoTemplate({ cog: cog }));
+    div.find('[data-container="buttons"]').html(cogButtonsTemplate({ cog: cog }));
   },
 
   removeCog: function(cog) {
-    this.$(
-      '[data-cog-id= ' + cog.id + 
-      '][data-machine-id="' + cog.machineId + '"]'
-    ).remove();
+    this.$(`[data-cog-id="${cog.id}"][data-machine-id="${cog.machineId}"]`).remove();
   },
 
   events: {
@@ -122,16 +107,13 @@ var View = Backbone.View.extend({
   },
 
   clickAction: function(evt) {
-    var
-      btnEl = $(evt.currentTarget),
-      cogEl = btnEl.closest('.cog'),
-      cogId = cogEl.attr('data-cog-id'),
-      machineId = cogEl.attr('data-machine-id'),
-      action=btnEl.attr('data-action');
+    const btnEl = $(evt.currentTarget);
+    const cogEl = btnEl.closest('.cog');
+    const cogId = cogEl.attr('data-cog-id');
+    const machineId = cogEl.attr('data-machine-id');
+    let action = btnEl.attr('data-action');
 
-    var action;
-
-    if (action == 'expand') {
+    if (action === 'expand') {
       cogEl.find('.more').toggleClass('expanded');
       btnEl.toggleClass('expanded');
       cogEl.find('.screen').html('');
@@ -148,13 +130,13 @@ var View = Backbone.View.extend({
         cogId: cogId,
         machineId: machineId
       });
-    } else if (action == 'clear') {
+    }
+    else if (action === 'clear') {
       this.$(
-        '[data-cog-id="' + cogId + 
-        '"][data-machine-id="' + machineId + 
-        '"] [data-container="screen"]'
+        `[data-cog-id="${cogId}"][data-machine-id="${machineId}"] [data-container="screen"]`
       ).empty();
-    } else {
+    }
+    else {
       socket.emit('action', {
         action: action.toLowerCase(),
         cogId: cogId,
@@ -164,32 +146,27 @@ var View = Backbone.View.extend({
   },
 
   onStream: function(o) {
-    var el = this.$(
-      '[data-cog-id="' + o.cogId + 
-      '"][data-machine-id="' + o.machineId + 
-      '"] [data-container="screen"]'
+    const el = this.$(
+      `[data-cog-id="${o.cogId}"][data-machine-id="${o.machineId}"] [data-container="screen"]`
     );
 
-    let data = ansi_up.ansi_to_html(o.data);
-    var txt = (o.type == 'stderr') ? 
-      '<span class="error">' + data + '</span>':
-      '<span class="">' + data + '</span>';
+    const data = ansi_up.ansi_to_html(o.data);
+    const txt = (o.type === 'stderr') ? `<span class="error">${data}</span>` : `<span class="">${data}</span>`;
 
     el.append(txt);
-    if (el.children().length > 20)
+    if (el.children().length > 20) {
       $(el.children()[0]).remove();
+    }
 
     el.scrollTop(el[0].scrollHeight);
   },
 
   onStat: function(st) {
-    var cogEl = this.$(
-      '[data-cog-id="' + st.cogId + 
-      '"][data-machine-id="' + st.machineId + 
-      '"]'
+    const cogEl = this.$(
+      `[data-cog-id="${st.cogId}"][data-machine-id="${st.machineId}"]`
     );
     cogEl.find('[data-container=memory-usage]').html(
-      (st.memory / 1024 /1024).toFixed(2) + ' MB'
+      (st.memory / 1024 / 1024).toFixed(2) + ' MB'
     );
     cogEl.find('[data-container=cpu-usage]').html(
       st.cpu.toFixed(2) + '%'
@@ -197,10 +174,9 @@ var View = Backbone.View.extend({
   }
 });
 
-
-var NavView = Backbone.View.extend({
+const NavView = Backbone.View.extend({
   load: function() {
-    this.$el.html(navTemplate({ username: loginUser }) );
+    this.$el.html(navTemplate({ username: loginUser }));
   },
 
   events: {
@@ -208,29 +184,28 @@ var NavView = Backbone.View.extend({
   },
 
   logout: function(evt) {
-    var btn = $(evt.currentTarget).button('loading');
-    $.ajax({ 
+    $.ajax({
       url: AUTH_URL,
       method: 'DELETE',
       success: function() { window.location.reload(); },
-      complete: function() { btn.button('reset'); }
-    })
+      complete: function() {
+        $(evt.currentTarget).button('loading').button('reset');
+      }
+    });
   }
-})
+});
 
 // Login
-var
-  AUTH_URL = '/api/auth',
-  authEl = $('.authentication'),
-  navEl = $('.nav'),
-  loginBtn = $('.authentication [data-action=login]'),
-  usernameEl = $('.authentication [name=username]'),
-  passwordEl = $('.authentication [name=password]'),
-  loginUser;
+const AUTH_URL = '/api/auth';
+const authEl = $('.authentication');
+const loginBtn = $('.authentication [data-action=login]');
+const usernameEl = $('.authentication [name=username]');
+const passwordEl = $('.authentication [name=password]');
+let loginUser;
 
-var login = function() {
-  var username = usernameEl.val();
-  var password = passwordEl.val();
+const login = () => {
+  const username = usernameEl.val();
+  const password = passwordEl.val();
 
   loginBtn.button('loading');
   $.ajax({
@@ -244,36 +219,37 @@ var login = function() {
       authEl.addClass('hidden');
       loginUser = username;
     },
-    error: function(r){
+    error: (r) => {
       alert(r.responseJSON ? r.responseJSON.error : 'Error loggin in.');
     },
     complete: function() { loginBtn.button('reset'); }
   });
-}
+};
 
 loginBtn.on('click', login);
-passwordEl.on('keydown', function(evt){
-  if (evt.keyCode == 13) loginBtn.click();
+passwordEl.on('keydown', (evt) => {
+  if (evt.keyCode === 13) {
+    loginBtn.click();
+  }
 });
 
 // Set up socket view.
-var view = new View({ el: '[data-container=main]' });
-var navView = new NavView({ el: '[data-container=nav]' });
-socket.on('connect', function(){
+const view = new View({ el: '[data-container=main]' });
+const navView = new NavView({ el: '[data-container=nav]' });
+socket.on('connect', () => {
   view.load();
   navView.load();
 });
-socket.on('connect_error', function(){
+socket.on('connect_error', () => {
   $('.no-service-icon').show();
 });
-socket.on('disconnect', function(){
+socket.on('disconnect', () => {
   $('.no-service-icon').show();
-})
-socket.on('reconnect', function(){
+});
+socket.on('reconnect', () => {
   // $('.no-service-icon').hide();
   // view.load();
-})
-
+});
 
 // Check Logged In.
 $.ajax({
@@ -283,9 +259,12 @@ $.ajax({
     if (json.username) {
       loginUser = json.username;
       socket.connect();
-    } else {
+    }
+    else {
       authEl.removeClass('hidden');
     }
   },
-  error: function() { alert('Can\'t reach aip') },
+  error: function() {
+    alert('Can\'t reach aip');
+  }
 });

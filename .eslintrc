@@ -6,20 +6,21 @@
       },
       "sourceType": "module"
     },
-  
+
     "env": {
       "es6": true,
       "node": true,
       "browser": true,
-      "mocha": true
+      "mocha": true,
+      "jquery": true
     },
-  
+
     "globals": {
       "document": false,
       "navigator": false,
       "window": false
     },
-  
+
     "rules": {
       "accessor-pairs": 2,
       "valid-jsdoc": 1,
@@ -151,4 +152,3 @@
       "yoda": [2, "never"]
     }
   }
-  
