@@ -1,3 +1,4 @@
+/* global io, Backbone, _ */
 const socket = io('/ui');
 let rowTemplate = _.template($('#user-row-template').html());
 let keyTemplate = _.template($('#key-template').html());
