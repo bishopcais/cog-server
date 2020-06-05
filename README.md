@@ -2,9 +2,9 @@
 
 A dashboard server to make easy managing running cogs within a CAIS.
 
-# Usage
+## Usage
 
-## Docker
+### Docker
 
 Use [docker-compose](https://docs.docker.com/compose/):
 
@@ -12,11 +12,11 @@ Use [docker-compose](https://docs.docker.com/compose/):
 docker-compose up
 ```
 
-## Locally
+### Locally
 
 This additionally requires an available MongoDB running somewhere.
 
-### Setup:
+#### Setup:
 
 ```bash
 npm install
@@ -28,13 +28,13 @@ the documentation for [@cisl/io](https://github.com/cislrpi/io) for details.
 
 Then, run `node scripts/create-admin.js` to create an admin user to use.
 
-### Running it:
+#### Running it:
 
 ```bash
 node server.js
 ```
 
-# Usage with crun-cli
+## Usage with crun-cli
 
 To have crun-cli be able to communicate with crun-server, you will need to
 configure it to use either the user that was created as part of `create-admin.js`
@@ -51,3 +51,19 @@ which for the above script would be:
 ```bash
 cog config -u admin -k key
 ```
+
+## Contributing
+
+We are open to contributions.
+
+* The software is provided under the [MIT license](LICENSE). Contributions to
+this project are accepted under the same license.
+* Please also ensure that each commit in the series has at least one
+`Signed-off-by:` line, using your real name and email address. The names in
+the `Signed-off-by:` and `Author:` lines must match. If anyone else
+contributes to the commit, they must also add their own `Signed-off-by:`
+line. By adding this line the contributor certifies the contribution is made
+under the terms of the
+[Developer Certificate of Origin (DCO)](DeveloperCertificateOfOrigin.txt).
+* Questions, bug reports, et cetera are raised and discussed on the issues page.
+* Please make merge requests into the master branch.
