@@ -1,0 +1,38 @@
+{
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "sourceType": "module"
+    },
+
+    "env": {
+      "es6": true,
+      "node": true,
+      "browser": true,
+      "mocha": true,
+      "jquery": true
+    },
+
+    "globals": {
+      "document": false,
+      "navigator": false,
+      "window": false
+    },
+
+    "plugins": [
+      "react"
+    ],
+
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+
+    "rules": {
+      "comma-dangle": ["error", "always-multiline"],
+      "eol-last": ["error", "always"],
+      "react/prop-types": "off"
+    }
+  }

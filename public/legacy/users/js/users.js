@@ -20,7 +20,7 @@ const ModalView = Backbone.View.extend({
       name: this.$('[name=name]').val(),
       password: this.$('[name=password]').val(),
       isAdmin: this.$('[name="is-admin"]').prop('checked'),
-      keys: _.map(this.keys, function(k) { return { key: k }; })
+      keys: _.map(this.keys, function(k) { return { key: k }; }),
     };
     if (!u.username) {
       alert('Username cannot be empty.');
@@ -55,7 +55,7 @@ const ModalView = Backbone.View.extend({
     _.each(this.keys, function(k) {
       el.append(keyTemplate({ key: k}));
     });
-  }
+  },
 });
 
 const View = Backbone.View.extend({
@@ -98,7 +98,7 @@ const View = Backbone.View.extend({
   events: {
     'click [data-action=new]': 'onClickNew',
     'click [data-action=delete]': 'onClickDelete',
-    'click [data-action=edit]': 'onClickMore'
+    'click [data-action=edit]': 'onClickMore',
   },
 
   onClickNew: function(evt) {
@@ -118,7 +118,7 @@ const View = Backbone.View.extend({
   showModal: function(user) {
     this.modalView = this.modalView || new ModalView();
     this.modalView.show(user);
-  }
+  },
 });
 
 let view = new View({ el: $('[data-container="main"]') });

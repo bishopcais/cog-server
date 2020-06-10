@@ -5,11 +5,13 @@ services:
     build: .
     restart: always
     depends_on:
-      - database
+      - mongo
     ports:
       - 7777:7777
+    volumes:
+      - ./:/home/cisl/server
 
-  database:
+  mongo:
     image: mongo:4
     restart: always
     volumes:

@@ -8,9 +8,9 @@ let user = new User({
   isAdmin: true,
   keys: [
     {
-      key: 'key'
-    }
-  ]
+      key: 'key',
+    },
+  ],
 });
 
 console.log(`Creating/Verifying user 'admin':`);

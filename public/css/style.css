@@ -1,0 +1,286 @@
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+#loading {
+    text-align: center;
+    margin: auto;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.form-signin
+{
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.form-signin .form-signin-heading, .form-signin .checkbox
+{
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox
+{
+    font-weight: normal;
+    margin-left: 25px;
+}
+
+.form-signin .form-control
+{
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus
+{
+    z-index: 2;
+}
+
+.form-signin input[type="text"]
+{
+    margin-bottom: 3px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.form-signin input[type="password"]
+{
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.account-wall
+{
+    margin-top: 20px;
+    padding: 40px 0px 20px 0px;
+    background-color: #f7f7f7;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.login-title
+{
+    font-size: 18px;
+    font-weight: 400;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.profile-img
+{
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.need-help
+{
+    margin-top: 10px;
+}
+
+.machine-container
+{
+    width: 98%;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+.machine
+{
+    display: flex;
+}
+
+.machine-details
+{
+    font-family: monospace;
+    display: table;
+    padding: 10px;
+    width: 350px;
+}
+
+.machine-details > div
+{
+    display: table-row;
+}
+
+.machine-details > div > div
+{
+    display: table-cell;
+}
+
+.machine-details > div > div:first-child {
+    width: 75px;
+    color: #A9A9A9;
+}
+
+.machine-cogs-container-container
+{
+    width: 100%;
+    padding: 10px;
+}
+
+.machine-cogs-container
+{
+    background-color: black;
+    height: 100%;
+    padding: 5px;
+}
+
+.machine-cog
+{
+    padding: 5px;
+    width: 365px;
+    position: relative;
+}
+
+.machine-cog-titlebar
+{
+    margin-bottom: 4px;
+}
+
+.machine-cog-title
+{
+    text-align: center;
+}
+
+.machine-cog-icon
+{
+    float: right;
+    margin-right: 5px;
+}
+
+.machine-cog-details
+{
+    font-family: monospace;
+}
+
+.machine-cog-details > div
+{
+    display: table-row;
+}
+
+.machine-cog-details > div > div
+{
+    display: table-cell;
+}
+
+.machine-cog-details > div > div:first-child
+{
+    color: #A9A9A9;
+    width: 65px;
+}
+
+.machine-cog-buttons
+{
+    margin-top: 5px;
+}
+
+.machine-cog .button
+{
+    display: inline-block;
+    cursor: pointer;
+    background-color: #626262;
+    padding: 3px;
+    margin-right: 4px;
+    font-size: 0.8rem;
+    min-width: 55px;
+}
+
+.machine-cog-buttons > .button:last-child
+{
+    margin-right: 0px;
+}
+
+.machine-cog > .console-toggle
+{
+    background-color: black;
+    padding: 2px;
+    color: #fff;
+    float: right;
+    line-height: 1;
+    position: absolute;
+    right: 3px;
+    bottom: 0;
+}
+
+.machine-cog-screen
+{
+    background: #000;
+    padding: 10px;
+    margin-bottom: 10px;
+    height: 150px;
+    white-space: pre-wrap;
+    overflow: auto;
+    font-family: monospace;
+}
+
+.machine-cog-screen > .error
+{
+    color: red;
+}
+
+.machine-cog-expanded
+{
+    margin-top: 10px;
+}
+
+.machine-cog-expanded > div:first-child
+{
+    margin-bottom: 5px;
+}
+
+.machine-cog-expanded > .stat > div
+{
+    display: inline-block;
+    font-size: 14px;
+}
+
+.machine-cog-expanded > .stat > div:first-child
+{
+    width: 160px;
+}
+
+.machine-cog-expanded > .stat > div > span
+{
+    font-family: monospace;
+}
+
+.user-table {
+    margin: 10px;
+    padding: 10px;
+}
+
+.user-table > table {
+    width: 100%;
+}
+
+.user-option {
+    display: inline-block;
+    padding: 3px;
+    margin-right: 5px;
+    font-size: 12px;
+    height: 28px;
+    width: 28px;
+    text-align: center;
+    cursor: pointer;
+}

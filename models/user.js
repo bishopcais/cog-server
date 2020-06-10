@@ -1,24 +1,28 @@
 const _ = require('lodash');
-const celio = require('@cisl/io');
+const io = require('@cisl/io');
 const bcrypt = require('bcryptjs');
 
-const UserSchema = new celio.mongo.mongoose.Schema({
-  username: { type: String, unique: true, lowercase: true },
+const UserSchema = new io.mongo.mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
+    lowercase: true,
+  },
   password: { type: String },
   keys: [{
-    key: { type: String }
+    key: { type: String },
   }],
 
   isAdmin: { type: Boolean, default: false },
   name: { type: String, default: '' },
-  email: { type: String }
+  email: { type: String },
 });
 
 UserSchema.methods.getJSON = function() {
   return {
     'id': this._id,
     'email': this.email,
-    'name': this.name
+    'name': this.name,
   };
 };
 
@@ -52,6 +56,7 @@ UserSchema.statics.createOrUpdate = function(u, next) {
 };
 
 UserSchema.statics.authenticate = function(creds, cb) {
+  console.log(creds);
   this.findOne({ username: creds.username }).exec((err, user) => {
     if (err) {
       return cb('Database error.');
@@ -68,4 +73,4 @@ UserSchema.statics.authenticate = function(creds, cb) {
   });
 };
 
-module.exports = celio.mongo.mongoose.model('User', UserSchema);
+module.exports = io.mongo.mongoose.model('User', UserSchema);

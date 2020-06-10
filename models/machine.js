@@ -16,7 +16,7 @@ const CogSchema = new io.mongo.mongoose.Schema({
   args: [String],
 
   status: String,
-  exitCode: Number
+  exitCode: Number,
 });
 
 const MachineSchema = new io.mongo.mongoose.Schema({
@@ -34,14 +34,14 @@ const MachineSchema = new io.mongo.mongoose.Schema({
     address: String,
     netmask: String,
     family: String,
-    mac: String
+    mac: String,
   }],
 
   hostname: String,
   cpus: [{ model: String, speed: Number}],
   memory: Number,
 
-  cogs: [CogSchema]
+  cogs: [CogSchema],
 });
 
 MachineSchema.statics.findOneByMac = function(info, next) {
@@ -53,7 +53,7 @@ MachineSchema.statics.findOneByMac = function(info, next) {
 
   this.findOne({
     username: info.username,
-    interfaces: { $elemMatch: { mac: aMac } }
+    interfaces: { $elemMatch: { mac: aMac } },
   }).exec(next);
 };
 
@@ -92,7 +92,7 @@ MachineSchema.methods.updateCog = function(c, next) {
   // Update
   _.each([
     'type', 'tags', 'description', 'pid', 'host', 'port',
-    'run', 'args', 'status', 'exitCode', 'cwd'
+    'run', 'args', 'status', 'exitCode', 'cwd',
   ], (k) => {
     if (c[k]) cog[k] = c[k];
   });

@@ -103,7 +103,7 @@ const View = Backbone.View.extend({
   },
 
   events: {
-    'click [data-action]': 'clickAction'
+    'click [data-action]': 'clickAction',
   },
 
   clickAction: function(evt) {
@@ -122,13 +122,13 @@ const View = Backbone.View.extend({
         action: 'watch',
         cogId: cogId,
         machineId: machineId,
-        watching: btnEl.hasClass('expanded')
+        watching: btnEl.hasClass('expanded'),
       });
 
       socket.emit('action', {
         action: 'playback',
         cogId: cogId,
-        machineId: machineId
+        machineId: machineId,
       });
     }
     else if (action === 'clear') {
@@ -140,7 +140,7 @@ const View = Backbone.View.extend({
       socket.emit('action', {
         action: action.toLowerCase(),
         cogId: cogId,
-        machineId: machineId
+        machineId: machineId,
       });
     }
   },
@@ -171,7 +171,7 @@ const View = Backbone.View.extend({
     cogEl.find('[data-container=cpu-usage]').html(
       st.cpu.toFixed(2) + '%'
     );
-  }
+  },
 });
 
 const NavView = Backbone.View.extend({
@@ -180,7 +180,7 @@ const NavView = Backbone.View.extend({
   },
 
   events: {
-    'click [data-action=logout]': 'logout'
+    'click [data-action=logout]': 'logout',
   },
 
   logout: function(evt) {
@@ -190,9 +190,9 @@ const NavView = Backbone.View.extend({
       success: function() { window.location.reload(); },
       complete: function() {
         $(evt.currentTarget).button('loading').button('reset');
-      }
+      },
     });
-  }
+  },
 });
 
 // Login
@@ -222,7 +222,7 @@ const login = () => {
     error: (r) => {
       alert(r.responseJSON ? r.responseJSON.error : 'Error loggin in.');
     },
-    complete: function() { loginBtn.button('reset'); }
+    complete: function() { loginBtn.button('reset'); },
   });
 };
 
@@ -266,5 +266,5 @@ $.ajax({
   },
   error: function() {
     alert('Can\'t reach aip');
-  }
+  },
 });

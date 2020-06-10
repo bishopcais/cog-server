@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cog Watch</title>
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/fontawesome/all.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/main.css">
+</head>
+<body>
+  <div class="nav" data-container="nav">
+  </div>
+  <script type="text/template" id="nav-template">
+    <div class="username">
+      <%= username %>
+    </div>
+    <a href="/users" class="button logout">
+      <i class="fas fa-users"></i>
+      Users
+    </a>
+<!--     <button class="button">
+      <i class="fa fa-question"></i>
+      Help
+    </button>
+ -->
+    <button class="button" data-action="logout">
+      <i class="fas fa-sign-out-alt"></i>
+      Logout
+    </button>
+  </script>
+
+  <div class="authentication hidden">
+    <div class="inputs">
+      <input type="text" name="username" placeholder="username"><br>
+      <input type="password" name="password" placeholder="password"><br>
+      <button class="button login-button" data-action="login" data-loading-text="...">Login</button>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div data-container="main">
+      <div data-container="machines" class="machines"></div>
+    </div>
+  </div>
+
+  <div class="no-service-icon">
+    <i class="fas fa-unlink"></i>
+  </div>
+
+  <script type="text/template" id="machine-template">
+    <div class="machine-watcher">
+      <i class="fas fa-laptop"></i>
+    </div>
+
+    <% if (machine.connected == true) { %>
+    <div class="connected">
+      <span class="key"><i class="fas fa-link"></i></span>
+      <%= moment(machine.lastConnected).format('MM/DD/YY hh:MMa') %>
+    </div>
+    <% } else { %>
+    <div class="disconnected">
+      <span class="key"><i class="fas fa-unlink"></i> </span>
+      <%= moment(machine.lastDisconnected).format('MM/DD/YY hh:MMa') %>
+    </div>
+    <% } %>
+    <div class="user">
+      <span class="key">User</span> <%= machine.user %>
+    </div>
+    <div class="platform">
+      <span class="key">Platform</span> <%= machine.platform %>
+    </div>
+    <div class="pid">
+      <span class="key">PID</span> <%= machine.pid %>
+    </div>
+    <div class="hostname">
+      <span class="key">Hostname</span> <%= machine.hostname %>
+    </div>
+    <div class="cpus">
+      <span class="key">CPUs</span>
+      <span data-toggle="tooltip" class="tooltipped" title="<%= _.pluck(machine.cpus, 'model').join('\n') %>"><%= machine.cpus.length %></span>
+    </div>
+    <div class="memory">
+      <span class="key">Memory</span> <%= (machine.memory / (1024 * 1024 * 1024)).toFixed(2) %> GB
+    </div>
+
+    <div class="ifaces">
+      <% _.each(machine.interfaces, function(i) { %>
+        <div class="interfaces">
+          <div class="key"><%= i.family %></div> <%= i.address %>
+        </div>
+      <% }); %>
+    </div>
+  </script>
+
+  <script type="text/template" id="cog-info-template">
+    <div class="id">
+      <%= cog.id %>
+    </div>
+
+    <div class="status <%= cog.status %>">
+      <span class="key">Status</span>
+      <%= cog.status %> <%= (cog.status == 'exit' && cog.exitCode) ? '- ' + cog.exitCode : '' %>
+    </div>
+    <div class="type">
+      <span class="key">Type</span> <%= cog.type %>
+    </div>
+    <div class="host">
+      <span class="key">Host</span> <%= cog.host %>
+    </div>
+    <div class="port">
+      <span class="key">Port</span> <%= cog.port %>
+    </div>
+    <div class="port">
+      <span class="key">Command</span> <%= cog.run %>  <%= cog.args.join(' ') %>
+    </div>
+    <div class="pid">
+      <span class="key">PID</span> <%= cog.pid %>
+    </div>
+
+    <div class="tags">
+      <% cog.tags.forEach(function(tag) { %>
+        <span class="tag"> <%= tag %></span>
+      <% }) %>
+    </div>
+
+    <div class="buttons">
+      <% if (cog.status == 'exit') { %>
+        <div class="button run" data-action="run">
+          <i class="fas fa-play"></i>
+          run
+        </div>
+      <% } else { %>
+        <div class="button stop" data-action="stop">
+          <i class="fas fa-stop"></i>
+          Stop
+        </div>
+      <% } %>
+
+      <div class="button" data-action="sighup">
+        <i class="fas fa-phone-slash"></i> SIGHUP
+      </div>
+      <div class="button" data-action="sigusr1">
+        <i class="fas fa-wave-square"></i> SIGUSR1
+      </div>
+      <!--
+      <div class="btn-group">
+        <button type="button" class="button-dropdown" data-action='SIGHUP'><i class="fas fa-phone-slash"></i> SIGHUP</button>
+        <button type="button" class="button dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a><i class="fas fa-wave-square"></i> SIGUSR1</a></li>
+          <li><a><i class="fas fa-signature"></i> SIGUSR2</a></li>
+        </ul>
+      </div>
+      -->
+    </div>
+  </script>
+
+  <script type="text/template" id="cog-buttons-template">
+    <div class="description">
+      <%= cog.description %>
+    </div>
+
+    <div class="buttons">
+      <div class="button clear" data-action="clear">
+        <i class="fa fa-eraser"></i>
+        Clear
+      </div>
+    </div>
+  </script>
+
+  <script type="text/template" id="cog-template">
+    <div class="cog-watcher">
+      <i class="fas fa-cog"></i>
+    </div>
+    <div data-container="info">
+    </div>
+
+    <div class="toggle-container">
+      <div class="toggle-button" data-action="expand">
+        <i class="fas fa-angle-down"></i>
+        <i class="fas fa-angle-up"></i>
+      </div>
+    </div>
+
+    <div class="more">
+      <div data-container="buttons"></div>
+      <div class="screen" data-container="screen"></div>
+      <div class="stats">
+        <div>
+          <span class="key">Memory:</span> <span data-container="memory-usage">---</span>
+        </div>
+        <div>
+          <span class="key">CPU Usage:</span> <span data-container="cpu-usage">---</span>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/libraries/js/jquery.min.js"></script>
+  <script src="/libraries/js/moment.min.js"></script>
+  <script src="/libraries/js/bootstrap.min.js"></script>
+  <script src="/libraries/js/underscore-min.js"></script>
+  <script src="/libraries/js/backbone-min.js"></script>
+  <script src="/libraries/js/ansi_up.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
