@@ -47,6 +47,7 @@ RUN npm install \
     && cp /home/cisl/server/.docker/cog.omnibus.json /home/cisl/server/cog.json
 
 COPY --from=builder /src/dist /home/cisl/server/
+COPY --from=builder /src/public/index.html /home/cisl/server/public/index.html
 
 USER root
 
