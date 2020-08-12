@@ -1,15 +1,15 @@
 # cog-server
 
+[![Docker Automated build](https://img.shields.io/docker/automated/bishopcais/cog-server)](https://hub.docker.com/r/bishopcais/cog-server)
+
 A dashboard server to make easy managing running cogs within a CAIS.
 
 ## Usage
 
 ### Docker
 
-Use [docker-compose](https://docs.docker.com/compose/):
-
 ```bash
-docker-compose up
+docker run --rm --name cog-server bishopcais/cog-server
 ```
 
 ### Locally
