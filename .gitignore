@@ -38,3 +38,6 @@ node_modules
 settings.js
 cog.json
 !.docker/cog.json
+
+# webpack artifacts
+dist/
