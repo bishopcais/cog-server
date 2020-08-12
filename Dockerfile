@@ -55,4 +55,4 @@ RUN /bin/bash -c "mongod &" \
     && sleep 10 \
     && runuser -p -u cisl node /home/cisl/server/scripts/create-admin.js
 
-ENTRYPOINT ["/home/cisl/server/.docker/docker-entrypoint.sh"]
+ENTRYPOINT ["/home/cisl/server/.docker/entrypoint.sh"]
