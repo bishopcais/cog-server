@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../src/server/models/user');
 
 let user = new User({
   username: 'admin',
