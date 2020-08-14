@@ -39,7 +39,7 @@ if (isProduction) {
 // Session
 let sessionMiddleware = session({
   key: 'express.sid',
-  secret: crypto.randomBytes(20).toString('hex'),
+  secret: isProduction ? crypto.randomBytes(20).toString('hex') : 'secret',
   saveUninitialized: true,
   resave: false,
   store: store,
@@ -68,8 +68,10 @@ if (!isProduction) {
 app.use(express.json());
 app.use(sessionMiddleware);
 
-app.use('/api/auth', require('./apis/auth'));
-app.use('/api/machine', require('./apis/machine'));
+app.use('/api/auth', require('./src/server/api/auth'));
+app.use('/api/machine', require('./src/server/api/machine'));
+app.use('/api/service', require('./src/server/api/service'));
+
 app.use('/', express.static('public'));
 if (isProduction) {
   app.use('/js/bundle.js', express.static(path.join(__dirname, 'dist', 'bundle.js')));
@@ -89,4 +91,4 @@ io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
 
-require('./socket/io')(io);
+require('./src/server/io')(io);

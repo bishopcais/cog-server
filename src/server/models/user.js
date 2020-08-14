@@ -67,7 +67,7 @@ UserSchema.statics.authenticate = function(creds, cb) {
 
     let match = bcrypt.compareSync(creds.password, user.password);
     if (!match) {
-      return cb('Passwords don\'t match');
+      return cb("Passwords don't match");
     }
     return cb(null, user);
   });

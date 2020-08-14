@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const cog = require('./cog');
 
@@ -9,13 +10,14 @@ const webpackConfig = {
   mode: isProduction ? 'production' : 'development',
   entry: {
     app: [
-      './client/src/index.jsx',
+      './src/client/index.jsx',
     ],
   },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/js/',
-    filename: `bundle.js`,
+    chunkFilename: '[name].bundle.js',
+    filename: `[name].bundle.js`,
   },
   module: {
     rules: [
@@ -45,9 +47,11 @@ const webpackConfig = {
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: './client/index.html',
+      template: './src/client/index.html',
       filename: path.join(__dirname, 'public', 'index.html'),
+      alwaysWriteToDisk: true,
     }),
+    new HtmlWebpackHarddiskPlugin(),
   ],
 };
 

@@ -41,3 +41,4 @@ cog.json
 
 # webpack artifacts
 dist/
+public/index.html

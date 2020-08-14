@@ -1,13 +1,16 @@
-/* global io */
-
 import React, { Component } from 'react';
+import io from 'socket.io-client';
 
-import { ConnectState } from './connect-state';
-import { CogServer } from './cog-server';
-import { LoginForm } from './login-form';
-import { Users } from './users';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCog, faCogs, faNetworkWired, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
-export class Container extends Component {
+import ConnectState from './connect-state';
+import CogServer from './cog-server';
+import LoginForm from './login-form';
+import Services from './services';
+import Users from './users';
+
+export default class Container extends Component {
     constructor(props) {
       super(props);
 
@@ -16,12 +19,8 @@ export class Container extends Component {
         connected: true,
         authenticated: undefined,
         user: undefined,
+        view: undefined,
       };
-
-      this.state.socket.on('connect', () => {
-        this.state.socket.emit('q machines');
-        this.state.socket.emit('q users');
-      });
 
       this.state.socket.on('connect_error', () => {
         this.setState({connected: false});
@@ -42,18 +41,38 @@ export class Container extends Component {
     }
 
     componentDidMount() {
+      if (location.hash) {
+        this.setState({view: location.hash.substring(1)});
+      }
+
       setTimeout(() => {
         fetch('/api/auth').then((res) => res.json()).then((res) => {
           const authenticated = res.username !== undefined;
-          if (authenticated) {
-            this.state.socket.connect();
-          }
-          this.setState({
-            authenticated: authenticated,
-            user: res.username,
-            view: 'home',
+          new Promise((resolve) => {
+            if (authenticated) {
+              this.state.socket.connect();
+              const checkConn = () => {
+                setTimeout(() => {
+                  if (this.state.socket.connected) {
+                    return resolve();
+                  }
+                  checkConn();
+                }, 1000);
+              }
+              checkConn();
+            }
+            else {
+              resolve();
+            }
+          }).then(() => {
+            this.setState({
+              authenticated: authenticated,
+              user: res.username,
+              view: !this.state.view ? 'cogs' : this.state.view,
+            });
           });
         });
+
       }, 500);
     }
 
@@ -71,22 +90,31 @@ export class Container extends Component {
 
     setView(event) {
       event.preventDefault();
-      this.setState({view: event.target.textContent.toLowerCase().trim()});
+      const view = event.currentTarget.textContent.toLowerCase().trim();
+      location.hash = view;
+      this.setState({view});
     }
 
     render() {
       if (this.state.authenticated !== undefined) {
         if (this.state.authenticated) {
-          let view = <CogServer socket={this.state.socket} />;
+          let view;
           if (this.state.view === 'users') {
             view = <Users socket={this.state.socket} />;
           }
+          else if (this.state.view === 'services') {
+            view = <Services socket={this.state.socket} />;
+          }
+          else {
+            view = <CogServer socket={this.state.socket} />;
+          }
+
           return (
             // eslint-disable-next-line react/jsx-no-undef
             <React.Fragment>
               <ConnectState connected={this.state.connected} />
               <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
-                <a className="navbar-brand" href="#"><i className='fas fa-cogs fa-lg' style={{marginRight: '5px'}}></i>Cog Server</a>
+                <a className="navbar-brand" href="#"><FontAwesomeIcon icon={faCogs} style={{marginRight: '5px'}} size='lg' /> Cog Server</a>
 
                 <div className="collapse navbar-collapse" id="navbarNav">
                   <ul className="navbar-nav mr-auto">
@@ -96,13 +124,16 @@ export class Container extends Component {
                       Welcome {this.state.user}
                     </li>
                     <li className='nav-item'>
-                      <a className='nav-link' href='#' onClick={this.setView}><i className='fas fa-home'></i> Home</a>
+                      <a className='nav-link' href='#' onClick={this.setView}><FontAwesomeIcon icon={faCogs} /> Cogs</a>
+                    </li>
+                    <li className='nav-item'>
+                      <a className='nav-link' href='#' onClick={this.setView}><FontAwesomeIcon icon={faNetworkWired} /> Services</a>
                     </li>
                     <li className="nav-item">
-                      <a className='nav-link' href='#' onClick={this.setView}><i className='fas fa-users'></i> Users</a>
+                      <a className='nav-link' href='#' onClick={this.setView}><FontAwesomeIcon icon={faUsers} /> Users</a>
                     </li>
                     <li className="nav-item">
-                      <a className='nav-link' href='#'><i className='fas fa-sign-out-alt'></i> Logout</a>
+                      <a className='nav-link' href='#'><FontAwesomeIcon icon={faSignOutAlt} /> Logout</a>
                     </li>
                   </ul>
                 </div>
@@ -119,7 +150,7 @@ export class Container extends Component {
       else {
         return (
           <div id="loading">
-            <i className='fas fa-cog fa-spin fa-10x'></i>
+            <FontAwesomeIcon icon={faCog} spin={true} size={'10x'} />
           </div>
         );
       }

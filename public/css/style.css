@@ -284,3 +284,60 @@ body {
     text-align: center;
     cursor: pointer;
 }
+
+.services-table {
+    margin: 10px;
+    padding: 10px;
+}
+
+.services-table > table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: grey;
+    width: 100%;
+}
+
+.services-table > table > thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.services-table > table th {
+    display: table-cell;
+    vertical-align: inherit;
+    font-weight: bold;
+    text-align: center;
+}
+
+.services-table > table > tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+
+.services-table > table tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+.services-table > table td {
+    display: table-cell;
+    padding: 4px;
+}
+
+.services-table > table ,
+.services-table > table th,
+.services-table > table td {
+    border: 1px solid grey;
+}
+
+.modal-content {
+    color: black;
+}
+
+.modal-content label {
+    width: 150px;
+}

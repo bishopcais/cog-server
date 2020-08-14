@@ -1,12 +1,64 @@
 'use script';
 
 const _ = require('lodash');
-const User = require('../models/user');
-const Machine = require('../models/machine');
+const fetch = require('node-fetch');
+const User = require('./models/user');
+const Machine = require('./models/machine');
+const Service = require('./models/service');
+
+let runnerio;
+let uiio;
+
+function checkServices() {
+  let serviceWait = {};
+  setInterval(async () => {
+    const services = await Service.find();
+
+    let promises = [];
+    services.forEach((service) => {
+      let needCheck = false;
+      if (serviceWait[service._id]) {
+        if (serviceWait[service._id] + 5000 > Date.now()) {
+          return;
+        }
+        else {
+          delete serviceWait[service._id];
+        }
+      }
+      if (!service.lastActive) {
+        needCheck = true;
+      }
+      else if (service.lastActive.getTime() + (service.testInterval * 1000) < Date.now()) {
+        needCheck = true;
+      }
+
+      if (needCheck) {
+        let url = service.host;
+        if (service.port) {
+          url += `:${service.port}`;
+        }
+        url += service.testPath;
+        promises.push(fetch(url).then((res) => res.json()).then((res) => {
+          service.status = 'responsive';
+          service.lastActive = new Date();
+        }).catch(() => {
+          service.status = 'UNRESPONSIVE';
+        }).then(() => {
+          return service.save();
+        }));
+        serviceWait[service._id] = Date.now();
+      }
+    });
+
+    await Promise.all(promises).then(() => {
+      uiio.emit('q? services');
+    });
+  }, 5000);
+}
 
 module.exports = (io) => {
-  const uiio = io.of('/ui');
-  const runnerio = io.of('/runner');
+  uiio = io.of('/ui');
+  runnerio = io.of('/runner');
 
   let register = {};
   let listeners = {};
@@ -291,6 +343,18 @@ module.exports = (io) => {
       });
     });
 
+    socket.on('q services', (filters) => {
+      Service.find(filters || {})
+      .sort({serviceType: 'ascending', host: 'ascending', port: 'ascending'})
+      .exec((err, services) => {
+        if (err) {
+          socket.emit('u service error');
+          return;
+        }
+        socket.emit('a services', _.map(services, (service) => service.toJSON()));
+      });
+    });
+
     // Stop stream forwarding.
     socket.on('disconnect', () => {
       for (let k in addedTo) {
@@ -315,4 +379,5 @@ module.exports = (io) => {
   });
 
   Machine.updateMany({}, { $set: { connected: false } }, { multi: true }, () => { });
+  checkServices();
 };
