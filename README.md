@@ -1,6 +1,6 @@
 # cog-server
 
-[![Docker Automated build](https://img.shields.io/docker/automated/bishopcais/cog-server)](https://hub.docker.com/r/bishopcais/cog-server)
+[![Docker Automated build](https://img.shields.io/docker/cloud/automated/bishopcais/cog-server)](https://hub.docker.com/r/bishopcais/cog-server)
 
 A dashboard server to make easy managing running cogs within a CAIS.
 
