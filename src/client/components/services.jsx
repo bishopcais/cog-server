@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Modal from 'react-modal';
 
+import socket from '../socket';
 import Form from './form';
 
 export default class Services extends Component {
@@ -12,29 +13,29 @@ export default class Services extends Component {
       modalOpen: false,
     };
 
-    this.props.socket.on('a services', (services) => {
+    socket.on('a services', (services) => {
       console.log('a services', services);
       this.setState({services});
     });
 
     /*
-    this.props.socket.on('a user', (user) => {
+    socket.on('a user', (user) => {
       console.log('a user', user);
     });
 
-    this.props.socket.on('d user', (user) => {
+    socket.on('d user', (user) => {
       console.log('d user', user);
     });
 
-    this.props.socket.on('a users', (users) => {
+    socket.on('a users', (users) => {
       console.log('a users', users);
       this.setState({users: users});
     });
     */
 
-    this.props.socket.on('q? services', () => {
+    socket.on('q? services', () => {
       console.log('q? services');
-      this.props.socket.emit('q services')
+      socket.emit('q services')
     });
 
     this.openModalAdd = this.openModalAdd.bind(this);
@@ -59,7 +60,7 @@ export default class Services extends Component {
   }
 
   componentDidMount() {
-    this.props.socket.emit('q services');
+    socket.emit('q services');
   }
 
   openModalAdd(event) {
@@ -102,7 +103,7 @@ export default class Services extends Component {
       },
     }).then((res) => res.json()).then((res) => {
       console.log(res);
-      this.props.socket.emit('q services');
+      socket.emit('q services');
       this.setState({modalOpen: false});
     });
   }
@@ -119,7 +120,7 @@ export default class Services extends Component {
       },
     }).then(res => res.json()).then(res => {
       console.log(res);
-      this.props.socket.emit('q services');
+      socket.emit('q services');
     });
   }
 

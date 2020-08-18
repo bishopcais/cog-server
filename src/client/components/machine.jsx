@@ -57,7 +57,6 @@ export default class Machine extends Component {
                 key={index}
                 details={cog}
                 machineId={this.props.details._id}
-                onSocketEmit={this.props.onSocketEmit}
                 stream={this.props.streams[cog.id] || []}
                 stat={this.props.stats[cog.id] || {}}
               />

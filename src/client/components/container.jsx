@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import io from 'socket.io-client';
+import socket from '../socket';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faCogs, faNetworkWired, faUsers, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
@@ -15,28 +15,26 @@ export default class Container extends Component {
       super(props);
 
       this.state = {
-        socket: io('/ui', { autoConnect: false }),
         connected: true,
         authenticated: undefined,
         user: undefined,
         view: undefined,
       };
 
-      this.state.socket.on('connect_error', () => {
+      socket.on('connect_error', () => {
         this.setState({connected: false});
 
       });
 
-      this.state.socket.on('disconnect', () => {
+      socket.on('disconnect', () => {
         this.setState({connected: true});
       });
 
-      this.state.socket.on('reconnect', () => {
+      socket.on('reconnect', () => {
         this.setState({connected: true});
       });
 
       this.handleLogin = this.handleLogin.bind(this);
-      this.socketEmit = this.socketEmit.bind(this);
       this.setView = this.setView.bind(this);
     }
 
@@ -50,10 +48,10 @@ export default class Container extends Component {
           const authenticated = res.username !== undefined;
           new Promise((resolve) => {
             if (authenticated) {
-              this.state.socket.connect();
+              socket.connect();
               const checkConn = () => {
                 setTimeout(() => {
-                  if (this.state.socket.connected) {
+                  if (socket.connected) {
                     return resolve();
                   }
                   checkConn();
@@ -77,15 +75,11 @@ export default class Container extends Component {
     }
 
     handleLogin(res) {
-      this.state.socket.connect();
+      socket.connect();
       this.setState({
         authenticated: true,
         user: res.username,
       });
-    }
-
-    socketEmit(key, details) {
-      this.state.socket.emit(key, details);
     }
 
     setView(event) {
@@ -100,13 +94,13 @@ export default class Container extends Component {
         if (this.state.authenticated) {
           let view;
           if (this.state.view === 'users') {
-            view = <Users socket={this.state.socket} />;
+            view = <Users />;
           }
           else if (this.state.view === 'services') {
-            view = <Services socket={this.state.socket} />;
+            view = <Services />;
           }
           else {
-            view = <CogServer socket={this.state.socket} />;
+            view = <CogServer />;
           }
 
           return (

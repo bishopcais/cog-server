@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import socket from '../socket';
 
 import Machine from './machine';
 
@@ -12,7 +13,7 @@ export default class CogServer extends Component {
       machinesStat: {},
     }
 
-    this.props.socket.on('a cog', (cog) => {
+    socket.on('a cog', (cog) => {
       console.log('a cog', cog);
       const machines = JSON.parse(JSON.stringify(this.state.machines));
       const idx = machines.findIndex((elem) => elem._id === cog.machineId);
@@ -31,11 +32,11 @@ export default class CogServer extends Component {
       this.setState({machines: machines});
     });
 
-    this.props.socket.on('a cogs', (cogs) => {
+    socket.on('a cogs', (cogs) => {
       console.log('a cogs', cogs);
     });
 
-    this.props.socket.on('r cog', (cog) => {
+    socket.on('r cog', (cog) => {
       console.log('r cog', cog)
       const machines = JSON.parse(JSON.stringify(this.state.machines));
       const idx = machines.findIndex((elem) => elem._id === cog.machineId);
@@ -50,7 +51,7 @@ export default class CogServer extends Component {
       this.setState({machines: machines});
     });
 
-    this.props.socket.on('a machine', (newMachine) => {
+    socket.on('a machine', (newMachine) => {
       console.log('a machine', newMachine);
       const machines = JSON.parse(JSON.stringify(this.state.machines));
       const idx = machines.findIndex((elem) => elem._id === newMachine._id);
@@ -63,12 +64,12 @@ export default class CogServer extends Component {
       this.setState({machines: machines});
     });
 
-    this.props.socket.on('a machines', (machines) => {
+    socket.on('a machines', (machines) => {
       console.log('a machines', machines);
       this.setState({machines});
     });
 
-    this.props.socket.on('stream', (o) => {
+    socket.on('stream', (o) => {
       console.log('stream', o);
       const streams = JSON.parse(JSON.stringify(this.state.machinesStream));
       if (!streams[o.machineId]) {
@@ -84,7 +85,7 @@ export default class CogServer extends Component {
       this.setState({machinesStream: streams});
     });
 
-    this.props.socket.on('stat', (stat) => {
+    socket.on('stat', (stat) => {
       // console.log('stat', stat);
       const stats = JSON.parse(JSON.stringify(this.state.machinesStat));
       if (!stats[stat.machineId]) {
@@ -97,12 +98,12 @@ export default class CogServer extends Component {
 
   componentDidMount() {
     console.log('q machines');
-    this.props.socket.emit('q machines');
+    socket.emit('q machines');
   }
 
   componentWillUnmount() {
     ['a cog', 'a cogs', 'r cog', 'a machine', 'a machines', 'stream', 'stat'].forEach((key) => {
-      this.props.socket.off(key);
+      socket.off(key);
     });
   }
 
@@ -115,7 +116,6 @@ export default class CogServer extends Component {
             details={item}
             streams={this.state.machinesStream[item._id] || {}}
             stats={this.state.machinesStat[item._id] || {}}
-            onSocketEmit={this.socketEmit}
           />
         ))}
       </div>

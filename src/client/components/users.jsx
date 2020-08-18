@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import socket from '../socket';
+
 export default class Users extends Component {
   constructor(props) {
     super(props);
@@ -8,22 +10,22 @@ export default class Users extends Component {
       users: [],
     };
 
-    this.props.socket.on('a user', (user) => {
+    socket.on('a user', (user) => {
       console.log('a user', user);
     });
 
-    this.props.socket.on('d user', (user) => {
+    socket.on('d user', (user) => {
       console.log('d user', user);
     });
 
-    this.props.socket.on('a users', (users) => {
+    socket.on('a users', (users) => {
       console.log('a users', users);
       this.setState({users: users});
     });
   }
 
   componentDidMount() {
-    this.props.socket.emit('q users');
+    socket.emit('q users');
   }
 
   render() {

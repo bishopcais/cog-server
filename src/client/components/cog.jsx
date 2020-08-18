@@ -12,6 +12,7 @@ import {
   faEraser,
 } from '@fortawesome/free-solid-svg-icons';
 
+import socket from '../socket';
 import { formatMemory } from '../util';
 
 export default class Cog extends Component {
@@ -30,7 +31,7 @@ export default class Cog extends Component {
   }
 
   handleButtonClick(event) {
-    this.props.onSocketEmit('action', {
+    socket.emit('action', {
       action: event.target.textContent.toLowerCase().trim(),
       cogId: this.props.details.id,
       machineId: this.props.machineId,
@@ -47,14 +48,14 @@ export default class Cog extends Component {
 
     const watching = !this.state.watching;
 
-    this.props.onSocketEmit('action', {
+    socket.emit('action', {
       action: 'watch',
       cogId: this.props.details.id,
       machineId: this.props.machineId,
       watching: watching,
     });
     if (watching) {
-      this.props.onSocketEmit('action', {
+      socket.emit('action', {
         action: 'playback',
         cogId: this.props.details.id,
         machineId: this.props.machineId,
