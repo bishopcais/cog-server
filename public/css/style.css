@@ -201,6 +201,8 @@ body {
     cursor: pointer;
     background-color: #626262;
     padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
     margin-right: 4px;
     font-size: 0.8rem;
     min-width: 55px;
