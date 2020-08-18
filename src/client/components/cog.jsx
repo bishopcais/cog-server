@@ -114,7 +114,7 @@ export default class Cog extends Component {
             <FontAwesomeIcon icon={running ? faStop : faPlay} /> {running ? 'Stop' : 'Run'}
           </div>
           <div className='button' onClick={this.handleButtonClick}>
-            <FontAwesomeIcon icon={faPhoneSlash} SIGHUP />
+            <FontAwesomeIcon icon={faPhoneSlash} /> SIGHUP
           </div>
           <div className='button' onClick={this.handleButtonClick}>
             <FontAwesomeIcon icon={faWaveSquare} /> SIGUSR1
