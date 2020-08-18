@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 import { formatMemory } from '../util';
-
 import Cog from './cog';
 
 export default class Machine extends Component {
@@ -11,7 +12,7 @@ export default class Machine extends Component {
       <div className='machine bg-dark'>
         <div className='machine-details'>
           <div>
-            <div style={{color: this.props.details.connected ? 'lightgreen' : 'red'}}><i className="fas fa-link"></i></div>
+            <div style={{color: this.props.details.connected ? 'lightgreen' : 'red'}}><FontAwesomeIcon icon={faLink} /></div>
             <div>
               {this.props.details.connected ? moment(this.props.details.lastConnected).format('MM/DD/YY hh:MMa') : moment(this.props.details.lastDisconnected).format('MM/DD/YY hh:MMa')}
             </div>
