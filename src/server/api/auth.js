@@ -4,7 +4,6 @@ module.exports = function(req, res) {
   if (req.method === 'POST') {
     User.authenticate(req.body, (error, user) => {
       if (error) {
-        console.log(error);
         res.status(400).send({ error: error });
       }
       else {

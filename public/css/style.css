@@ -217,12 +217,15 @@ body {
 {
     background-color: black;
     padding: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
     color: #fff;
     float: right;
     line-height: 1;
     position: absolute;
     right: 3px;
     bottom: 0;
+    cursor: pointer;
 }
 
 .machine-cog-screen
@@ -342,4 +345,20 @@ body {
 
 .modal-content label {
     width: 150px;
+}
+
+.ansi-yellow-fg {
+    color: rgb(187, 187, 0);
+}
+
+.ansi-blue-fg {
+    color: rgb(86, 86, 202);
+}
+
+.ansi-green-fg {
+    color: rgb(0, 187, 0);
+}
+
+.ansi-red-fg {
+    color: rgb(187, 0, 0);
 }

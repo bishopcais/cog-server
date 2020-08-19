@@ -18,7 +18,7 @@ const webpackConfig = require('./webpack.config');
 
 const cogJson = JSON.parse(fs.readFileSync(
   path.join(__dirname, 'cog.json'),
-  {encoding: 'utf8'}
+  {encoding: 'utf8'},
 ));
 
 const isProduction = process.env.NODE_ENV === 'production';

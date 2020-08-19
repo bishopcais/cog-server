@@ -15,6 +15,9 @@ import {
 import socket from '../socket';
 import { formatMemory } from '../util';
 
+const ansiUp = new AnsiUp();
+ansiUp.use_classes = true;
+
 export default class Cog extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +26,6 @@ export default class Cog extends Component {
       watching: false,
     };
 
-    this.ansiUp = new AnsiUp();
     this.screenRef = React.createRef();
 
     this.handleButtonClick = this.handleButtonClick.bind(this);
@@ -32,7 +34,7 @@ export default class Cog extends Component {
 
   handleButtonClick(event) {
     socket.emit('action', {
-      action: event.target.textContent.toLowerCase().trim(),
+      action: event.currentTarget.textContent.toLowerCase().trim(),
       cogId: this.props.details.id,
       machineId: this.props.machineId,
     });
@@ -120,7 +122,7 @@ export default class Cog extends Component {
           <div className='button' onClick={this.handleButtonClick}>
             <FontAwesomeIcon icon={faWaveSquare} /> SIGUSR1
           </div>
-          <div className='button sigusr2'>
+          <div className='button' onClick={this.handleButtonClick}>
             <FontAwesomeIcon icon={faWaveSquare} /> SIGUSR2
           </div>
         </div>
@@ -129,13 +131,13 @@ export default class Cog extends Component {
         </div>
         <div className='machine-cog-expanded' style={{display: this.state.watching ? 'block' : 'none'}}>
           <div>
-            <div className='button'>
+            <div className='button' onClick={this.handleButtonClick}>
                 <FontAwesomeIcon icon={faEraser} /> Clear
             </div>
           </div>
           <div className='machine-cog-screen' ref={this.screenRef}>
             {this.props.stream.map((stream, idx) => (
-              <span key={idx} className={stream.type === 'stderr' ? 'error' : ''} dangerouslySetInnerHTML={{__html: this.ansiUp.ansi_to_html(stream.data)}} />
+              <span key={idx} className={stream.type === 'stderr' ? 'error' : ''} dangerouslySetInnerHTML={{__html: ansiUp.ansi_to_html(stream.data)}} />
             ))}
           </div>
           <div className='stat'>

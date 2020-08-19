@@ -56,7 +56,6 @@ UserSchema.statics.createOrUpdate = function(u, next) {
 };
 
 UserSchema.statics.authenticate = function(creds, cb) {
-  console.log(creds);
   this.findOne({ username: creds.username }).exec((err, user) => {
     if (err) {
       return cb('Database error.');

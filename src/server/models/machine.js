@@ -47,7 +47,7 @@ const MachineSchema = new io.mongo.mongoose.Schema({
 MachineSchema.statics.findOneByMac = function(info, next) {
   let aMac = info.interfaces && info.interfaces[0] && info.interfaces[0].mac;
   if (!aMac) {
-    next(`Error. I can haz mac address.`);
+    next(new Error(`Mac address not found.`));
     return;
   }
 
@@ -66,27 +66,24 @@ MachineSchema.statics.create = function(info, next) {
 };
 
 MachineSchema.methods.updateInfo = function(info, next) {
-  let machine = this;
-  machine.platform = info.platform;
-  machine.user = info.user;
-  machine.pid = info.pid;
-  machine.interfaces = info.interfaces;
-  machine.hostname = info.hostname;
-  machine.cpus = info.cpus;
-  machine.memory = info.memory;
-  machine.cogs = [];
-  machine.connected = true;
-  machine.lastConnected = new Date();
-  machine.save(next);
+  this.platform = info.platform;
+  this.user = info.user;
+  this.pid = info.pid;
+  this.interfaces = info.interfaces;
+  this.hostname = info.hostname;
+  this.cpus = info.cpus;
+  this.memory = info.memory;
+  this.cogs = [];
+  this.connected = true;
+  this.lastConnected = new Date();
+  this.save(next);
 };
 
 MachineSchema.methods.updateCog = function(c, next) {
-  let machine = this;
-
-  let cog = _.find(machine.cogs, { id: c.id });
+  let cog = _.find(this.cogs, { id: c.id });
   if (!cog) { // Create
-    machine.cogs.push(c);
-    return machine.save(next);
+    this.cogs.push(c);
+    return this.save(next);
   }
 
   // Update
@@ -94,9 +91,11 @@ MachineSchema.methods.updateCog = function(c, next) {
     'type', 'tags', 'description', 'pid', 'host', 'port',
     'run', 'args', 'status', 'exitCode', 'cwd',
   ], (k) => {
-    if (c[k]) cog[k] = c[k];
+    if (c[k]) {
+      cog[k] = c[k];
+    }
   });
-  return machine.save(next);
+  return this.save(next);
 };
 
 MachineSchema.methods.removeCog = function(c, next) {

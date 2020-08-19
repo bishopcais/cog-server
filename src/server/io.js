@@ -39,6 +39,7 @@ function checkServices() {
         }
         url += service.testPath;
         promises.push(fetch(url).then((res) => res.json()).then((res) => {
+          // console.log(res);
           service.status = 'responsive';
           service.lastActive = new Date();
         }).catch(() => {
@@ -156,7 +157,7 @@ module.exports = (io) => {
     socket.on('u cog', (c) => {
       socket.machine.updateCog(c, (err, machine) => {
         if (err) {
-          console.log(err);
+          console.error(err);
           socket.emit('u cog error', 'Database error.');
           return;
         }
@@ -175,7 +176,7 @@ module.exports = (io) => {
     socket.on('u cogs', (cs) => {
       socket.machine.updateCogs(cs, (err, machine) => {
         if (err) {
-          console.log(err);
+          console.error(err);
           socket.emit('u cogs error', 'Database error.');
           return;
         }
@@ -196,6 +197,20 @@ module.exports = (io) => {
         c.machineId = machine._id;
         uiio.emit('r cog', c);
       });
+    });
+
+    socket.on('clear', (o) => {
+      let cid = o.cogId;
+      let mid = o.machineId = socket.machine._id;
+      if (!cid) {
+        return;
+      }
+      let ls = (listeners[mid] || {})[cid];
+
+      if (!ls) {
+        return;
+      }
+      ls.forEach((l) => { l.emit('clear', o); });
     });
 
     socket.on('stream', (o) => {
@@ -265,7 +280,7 @@ module.exports = (io) => {
 
       let rs = register[mid];
       if (!rs) {
-        console.log('action error');
+        console.error('action error');
         socket.emit('action error', 'Not registered.');
         return;
       }
@@ -293,8 +308,7 @@ module.exports = (io) => {
           }
         }
       }
-
-      if (action.action == 'playback') {
+      else if (action.action === 'playback') {
         // todo: potential race condition.
         rs.once('a playback', (streams) => {
           streams.forEach((s) => {

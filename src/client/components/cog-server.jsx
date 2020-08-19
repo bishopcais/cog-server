@@ -69,6 +69,16 @@ export default class CogServer extends Component {
       this.setState({machines});
     });
 
+    socket.on('clear', (o) => {
+      console.log('clear', o);
+      const streams = JSON.parse(JSON.stringify(this.state.machinesStream));
+      if (!streams[o.machineId]) {
+        streams[o.machineId] = {};
+      }
+      streams[o.machineId][o.cogId] = [];
+      this.setState({machinesStream: streams});
+    });
+
     socket.on('stream', (o) => {
       console.log('stream', o);
       const streams = JSON.parse(JSON.stringify(this.state.machinesStream));
