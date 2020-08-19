@@ -13,9 +13,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "lint": "eslint scripts src",
-    "lint:fix": "eslint --fix scripts src",
-    "build": "webpack"
+    "lint": "eslint scripts src server.js",
+    "lint:fix": "eslint --fix scripts src server.js",
+    "build": "NODE_ENV=production webpack"
   },
   "dependencies": {
     "@cisl/io": "^1.0.0-dev.14",

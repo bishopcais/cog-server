@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
@@ -37,7 +39,7 @@ if (isProduction) {
 }
 
 // Session
-let sessionMiddleware = session({
+const sessionMiddleware = session({
   key: 'express.sid',
   secret: isProduction ? crypto.randomBytes(20).toString('hex') : 'secret',
   saveUninitialized: true,
@@ -46,22 +48,22 @@ let sessionMiddleware = session({
 });
 
 if (!isProduction) {
-    //reload=true:Enable auto reloading when changing JS files or content
-    //timeout=1000:Time from disconnecting from server to reconnecting
-    webpackConfig.entry.app.unshift('webpack-hot-middleware/client?reload=true&timeout=1000');
+  //reload=true:Enable auto reloading when changing JS files or content
+  //timeout=1000:Time from disconnecting from server to reconnecting
+  webpackConfig.entry.app.unshift('webpack-hot-middleware/client?reload=true&timeout=1000');
 
-    //Add HMR plugin
-    webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  //Add HMR plugin
+  webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
-    const compiler = webpack(webpackConfig);
+  const compiler = webpack(webpackConfig);
 
-    //Enable "webpack-dev-middleware"
-    app.use(webpackDevMiddleware(compiler, {
-        publicPath: webpackConfig.output.publicPath,
-    }));
+  //Enable "webpack-dev-middleware"
+  app.use(webpackDevMiddleware(compiler, {
+    publicPath: webpackConfig.output.publicPath,
+  }));
 
-    //Enable "webpack-hot-middleware"
-    app.use(webpackHotMiddleware(compiler));
+  //Enable "webpack-hot-middleware"
+  app.use(webpackHotMiddleware(compiler));
 }
 
 // App
@@ -79,15 +81,15 @@ if (isProduction) {
 
 app.use(
   '/css/fontawesome',
-  express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'css'))
+  express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'css')),
 );
 app.use(
   '/css/webfonts',
-  express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'webfonts'))
+  express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'webfonts')),
 );
 
 // Start socket manager
-io.use(function(socket, next) {
+io.use((socket, next) => {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
 
