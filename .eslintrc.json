@@ -4,7 +4,7 @@
       "ecmaFeatures": {
         "jsx": true
       },
-      "sourceType": "module"
+      "sourceType": "script"
     },
 
     "env": {
@@ -26,13 +26,17 @@
     ],
 
     "extends": [
-      "eslint:recommended",
+      "@masterodin/eslint-config-javascript",
       "plugin:react/recommended"
     ],
 
     "rules": {
-      "comma-dangle": ["error", "always-multiline"],
-      "eol-last": ["error", "always"],
       "react/prop-types": "off"
+    },
+
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
     }
   }

@@ -1,6 +1,8 @@
+'use strict';
+
 const User = require('../models/user');
 
-module.exports = function(req, res) {
+module.exports = (req, res) => {
   if (req.method === 'POST') {
     User.authenticate(req.body, (error, user) => {
       if (error) {

@@ -1,6 +1,8 @@
+'use strict';
+
 const User = require('../src/server/models/user');
 
-let user = new User({
+const user = new User({
   username: 'admin',
   password: 'password',
   name: 'Admin',
@@ -13,20 +15,20 @@ let user = new User({
   ],
 });
 
-console.log(`Creating/Verifying user 'admin':`);
-user.save(function(err) {
-  let exit_code = 0;
+console.log("Creating/Verifying user 'admin':");
+user.save((err) => {
+  let exitCode = 0;
   if (err) {
     if (err['name'] === 'MongoError' && err['code'] === 11000) {
       console.log('>  verified');
     }
     else {
       console.error('  Error creating admin: ', err);
-      exit_code = -1;
+      exitCode = -1;
     }
   }
   else {
     console.log('>  created');
   }
-  process.exit(exit_code);
+  process.exit(exitCode);
 });

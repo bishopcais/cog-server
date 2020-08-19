@@ -1,3 +1,5 @@
+'use strict';
+
 const io = require('@cisl/io');
 
 const ServiceSchema = new io.mongo.mongoose.Schema({

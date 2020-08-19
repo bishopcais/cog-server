@@ -1,3 +1,5 @@
+'use strict';
+
 const _ = require('lodash');
 const io = require('@cisl/io');
 const bcrypt = require('bcryptjs');
@@ -9,9 +11,11 @@ const UserSchema = new io.mongo.mongoose.Schema({
     lowercase: true,
   },
   password: { type: String },
-  keys: [{
-    key: { type: String },
-  }],
+  keys: [
+    {
+      key: { type: String },
+    },
+  ],
 
   isAdmin: { type: Boolean, default: false },
   name: { type: String, default: '' },
@@ -28,14 +32,14 @@ UserSchema.methods.getJSON = function() {
 
 UserSchema.pre('save', function(next) {
   if (this.isModified('password')) {
-    let pw = bcrypt.hashSync(this.get('password'), bcrypt.genSaltSync());
+    const pw = bcrypt.hashSync(this.get('password'), bcrypt.genSaltSync());
     this.set('password', pw);
   }
   next();
 });
 
 UserSchema.statics.createOrUpdate = function(u, next) {
-  let User = this;
+  const User = this;
 
   User.findOne({ username: u.username }).exec((err, user) => {
     if (err) {
@@ -64,7 +68,7 @@ UserSchema.statics.authenticate = function(creds, cb) {
       return cb('User not found');
     }
 
-    let match = bcrypt.compareSync(creds.password, user.password);
+    const match = bcrypt.compareSync(creds.password, user.password);
     if (!match) {
       return cb("Passwords don't match");
     }

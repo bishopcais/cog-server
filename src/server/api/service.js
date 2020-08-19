@@ -1,6 +1,10 @@
+'use strict';
+
 const Service = require('../models/service');
 
 function getService(req, res) {
+  console.log(req);
+  res.json({done: true});
 }
 
 function postService(req, res) {

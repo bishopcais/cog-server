@@ -1,4 +1,4 @@
-'use script';
+'use strict';
 
 const _ = require('lodash');
 const fetch = require('node-fetch');
@@ -10,20 +10,18 @@ let runnerio;
 let uiio;
 
 function checkServices() {
-  let serviceWait = {};
+  const serviceWait = {};
   setInterval(async () => {
     const services = await Service.find();
 
-    let promises = [];
+    const promises = [];
     services.forEach((service) => {
       let needCheck = false;
       if (serviceWait[service._id]) {
         if (serviceWait[service._id] + 5000 > Date.now()) {
           return;
         }
-        else {
-          delete serviceWait[service._id];
-        }
+        delete serviceWait[service._id];
       }
       if (!service.lastActive) {
         needCheck = true;
@@ -38,7 +36,7 @@ function checkServices() {
           url += `:${service.port}`;
         }
         url += service.testPath;
-        promises.push(fetch(url).then((res) => res.json()).then((res) => {
+        promises.push(fetch(url).then((res) => res.json()).then(() => {
           // console.log(res);
           service.status = 'responsive';
           service.lastActive = new Date();
@@ -61,11 +59,11 @@ module.exports = (io) => {
   uiio = io.of('/ui');
   runnerio = io.of('/runner');
 
-  let register = {};
-  let listeners = {};
+  const register = {};
+  const listeners = {};
 
   // Runner authentication and registry.
-  runnerio.use(function(socket, next) {
+  runnerio.use((socket, next) => {
     let info;
     try {
       info = JSON.parse(socket.handshake.query.info);
@@ -97,13 +95,14 @@ module.exports = (io) => {
       }
 
       // Authorization
-      let key = _.find(user.keys, { key: info.key });
+      const key = _.find(user.keys, { key: info.key });
       if (!key) {
         next(new Error('Invalid secret API key.'));
         return;
       }
 
       Machine.findOneByMac(info, (err, machine) => {
+        info.cogs = [];
         if (err) {
           next(err);
           return;
@@ -166,7 +165,7 @@ module.exports = (io) => {
           socket.emit('u cog error', 'cog id error.');
           return;
         }
-        let cog = _.find(machine.cogs, { id: c.id }).toJSON();
+        const cog = _.find(machine.cogs, { id: c.id }).toJSON();
         cog.machineId = machine._id;
         socket.emit('u cog success');
         uiio.emit('a cog', cog);
@@ -180,8 +179,8 @@ module.exports = (io) => {
           socket.emit('u cogs error', 'Database error.');
           return;
         }
-        let cogs = machine.toJSON().cogs;
-        cogs.forEach((c) => { c.machineId = machine._id; });
+        const cogs = machine.toJSON().cogs;
+        cogs.forEach((c) => c.machineId = machine._id);
         socket.emit('u cogs success');
         uiio.emit('a cogs', machine.cogs);
       });
@@ -200,51 +199,51 @@ module.exports = (io) => {
     });
 
     socket.on('clear', (o) => {
-      let cid = o.cogId;
-      let mid = o.machineId = socket.machine._id;
+      const cid = o.cogId;
+      const mid = o.machineId = socket.machine._id;
       if (!cid) {
         return;
       }
-      let ls = (listeners[mid] || {})[cid];
 
+      const ls = (listeners[mid] || {})[cid];
       if (!ls) {
         return;
       }
-      ls.forEach((l) => { l.emit('clear', o); });
+      ls.forEach((l) => l.emit('clear', o));
     });
 
     socket.on('stream', (o) => {
-      let cid = o.cogId;
-      let mid = o.machineId = socket.machine._id;
+      const cid = o.cogId;
+      const mid = o.machineId = socket.machine._id;
       if (!cid) {
         return;
       }
-      let ls = (listeners[mid] || {})[cid];
 
+      const ls = (listeners[mid] || {})[cid];
       if (!ls) {
         return;
       }
-      ls.forEach((l) => { l.emit('stream', o); });
+      ls.forEach((l) => l.emit('stream', o));
     });
 
     socket.on('stat', (o) => {
-      let cid = o.cogId;
-      let mid = o.machineId = socket.machine._id;
+      const cid = o.cogId;
+      const mid = o.machineId = socket.machine._id;
       if (!cid) {
         return;
       }
-      let ls = (listeners[mid] || {})[cid];
 
+      const ls = (listeners[mid] || {})[cid];
       if (!ls) {
         return;
       }
-      ls.forEach((l) => { l.emit('stat', o); });
+      ls.forEach((l) => l.emit('stat', o));
     });
   });
 
   // GUI Authentication.
-  uiio.use(function(socket, next) {
-    let username = socket.request.session.username;
+  uiio.use((socket, next) => {
+    const username = socket.request.session.username;
     if (!username) {
       next(new Error('User is not logged in.'));
       return;
@@ -262,7 +261,7 @@ module.exports = (io) => {
   });
 
   uiio.on('connection', (socket) => {
-    let addedTo = {};
+    const addedTo = {};
 
     socket.on('q machines', (filters) => {
       Machine.find(filters || {}, (err, machines) => {
@@ -270,23 +269,23 @@ module.exports = (io) => {
           socket.emit('a machines error');
           return;
         }
-        socket.emit('a machines', _.map(machines, (m) => { return m.toJSON(); }));
+        socket.emit('a machines', _.map(machines, (m) => m.toJSON()));
       });
     });
 
     socket.on('action', (action) => {
-      let mid = action.machineId;
-      let cid = action.cogId;
+      const mid = action.machineId;
+      const cid = action.cogId;
 
-      let rs = register[mid];
+      const rs = register[mid];
       if (!rs) {
         console.error('action error');
         socket.emit('action error', 'Not registered.');
         return;
       }
 
-      let m = listeners[mid] = listeners[mid] || {};
-      let c = m[cid] = m[cid] || new Set();
+      const m = listeners[mid] = listeners[mid] || {};
+      const c = m[cid] = m[cid] || new Set();
 
       // Stream forwarding.
       if (action.action === 'watch') {
@@ -329,7 +328,7 @@ module.exports = (io) => {
           socket.emit('u user error');
           return;
         }
-        socket.emit('a users', _.map(users, (u) => { return u.toJSON(); }));
+        socket.emit('a users', _.map(users, (u) => u.toJSON()));
       });
     });
 
@@ -359,21 +358,21 @@ module.exports = (io) => {
 
     socket.on('q services', (filters) => {
       Service.find(filters || {})
-      .sort({serviceType: 'ascending', host: 'ascending', port: 'ascending'})
-      .exec((err, services) => {
-        if (err) {
-          socket.emit('u service error');
-          return;
-        }
-        socket.emit('a services', _.map(services, (service) => service.toJSON()));
-      });
+        .sort({serviceType: 'ascending', host: 'ascending', port: 'ascending'})
+        .exec((err, services) => {
+          if (err) {
+            socket.emit('u service error');
+            return;
+          }
+          socket.emit('a services', _.map(services, (service) => service.toJSON()));
+        });
     });
 
     // Stop stream forwarding.
     socket.on('disconnect', () => {
-      for (let k in addedTo) {
-        for (let l in addedTo[k]) {
-          let m = (listeners[k] || {})[l];
+      for (const k in addedTo) {
+        for (const l in addedTo[k]) {
+          const m = (listeners[k] || {})[l];
           if (m) {
             m.delete(socket);
           }

@@ -1,3 +1,5 @@
+'use strict';
+
 const _ = require('lodash');
 const io = require('@cisl/io');
 
@@ -30,12 +32,14 @@ const MachineSchema = new io.mongo.mongoose.Schema({
 
   username: { type: String, index: true },
 
-  interfaces: [{
-    address: String,
-    netmask: String,
-    family: String,
-    mac: String,
-  }],
+  interfaces: [
+    {
+      address: String,
+      netmask: String,
+      family: String,
+      mac: String,
+    },
+  ],
 
   hostname: String,
   cpus: [{ model: String, speed: Number}],
@@ -45,9 +49,9 @@ const MachineSchema = new io.mongo.mongoose.Schema({
 });
 
 MachineSchema.statics.findOneByMac = function(info, next) {
-  let aMac = info.interfaces && info.interfaces[0] && info.interfaces[0].mac;
+  const aMac = info.interfaces && info.interfaces[0] && info.interfaces[0].mac;
   if (!aMac) {
-    next(new Error(`Mac address not found.`));
+    next(new Error('Mac address not found.'));
     return;
   }
 
@@ -58,8 +62,8 @@ MachineSchema.statics.findOneByMac = function(info, next) {
 };
 
 MachineSchema.statics.create = function(info, next) {
-  let Machine = this;
-  let machine = new Machine(info);
+  const Machine = this;
+  const machine = new Machine(info);
   machine.connected = true;
   machine.lastConnected = new Date();
   machine.save(next);
@@ -80,16 +84,25 @@ MachineSchema.methods.updateInfo = function(info, next) {
 };
 
 MachineSchema.methods.updateCog = function(c, next) {
-  let cog = _.find(this.cogs, { id: c.id });
-  if (!cog) { // Create
+  const cog = _.find(this.cogs, { id: c.id });
+  if (!cog) {
     this.cogs.push(c);
     return this.save(next);
   }
 
   // Update
   _.each([
-    'type', 'tags', 'description', 'pid', 'host', 'port',
-    'run', 'args', 'status', 'exitCode', 'cwd',
+    'type',
+    'tags',
+    'description',
+    'pid',
+    'host',
+    'port',
+    'run',
+    'args',
+    'status',
+    'exitCode',
+    'cwd',
   ], (k) => {
     if (c[k]) {
       cog[k] = c[k];
@@ -99,7 +112,7 @@ MachineSchema.methods.updateCog = function(c, next) {
 };
 
 MachineSchema.methods.removeCog = function(c, next) {
-  let cog = _.find(this.cogs, { id: c.id });
+  const cog = _.find(this.cogs, { id: c.id });
   if (!cog) {
     return next('Cog not found.');
   }
