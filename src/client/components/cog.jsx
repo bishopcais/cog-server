@@ -1,6 +1,6 @@
 import AnsiUp from 'ansi_up';
 import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCog,
   faStop,
@@ -16,6 +16,7 @@ import socket from '../socket';
 import { formatMemory } from '../util';
 
 const ansiUp = new AnsiUp();
+/* eslint-disable-next-line camelcase */
 ansiUp.use_classes = true;
 
 export default class Cog extends Component {
@@ -24,12 +25,50 @@ export default class Cog extends Component {
 
     this.state = {
       watching: false,
+      stream: [],
+      stat: null,
     };
 
     this.screenRef = React.createRef();
 
     this.handleButtonClick = this.handleButtonClick.bind(this);
     this.handleExpandClick = this.handleExpandClick.bind(this);
+
+    this.streamFn = (o) => {
+      console.log(o);
+      if (o.machineId !== this.props.machineId || o.cogId !== this.props.details.id) {
+        return;
+      }
+      const stream = JSON.parse(JSON.stringify(this.state.stream));
+      stream.push(o);
+      if (stream.length > 20) {
+        stream.shift();
+      }
+      this.setState({stream});
+    };
+    socket.on('stream', this.streamFn);
+
+    this.clearFn = (o) => {
+      if (o.machineId !== this.props.machineId || o.cogId !== this.props.details.id) {
+        return;
+      }
+      this.setState({stream: []});
+    };
+    socket.on('clear', this.clearFn);
+
+    this.statFn = (stat) => {
+      if (stat.machineId !== this.props.machineId || stat.cogId !== this.props.details.id) {
+        return;
+      }
+      this.setState({stat});
+    };
+    socket.on('stat', this.statFn);
+  }
+
+  componentWillUnmount() {
+    socket.off('stream', this.streamFn);
+    socket.off('clear', this.clearFn);
+    socket.off('stat', this.statFn);
   }
 
   handleButtonClick(event) {
@@ -41,13 +80,7 @@ export default class Cog extends Component {
     event.preventDefault();
   }
 
-  handleExpandClick() {
-    /*
-      cogEl.find('.more').toggleClass('expanded');
-      btnEl.toggleClass('expanded');
-      cogEl.find('.screen').html('');
-      */
-
+  handleExpandClick(event) {
     const watching = !this.state.watching;
 
     socket.emit('action', {
@@ -57,6 +90,7 @@ export default class Cog extends Component {
       watching: watching,
     });
     if (watching) {
+      this.setState({stream: []});
       socket.emit('action', {
         action: 'playback',
         cogId: this.props.details.id,
@@ -65,15 +99,6 @@ export default class Cog extends Component {
     }
     this.setState({watching: watching});
     event.preventDefault();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.stream.length > 0
-      && (prevProps.stream.length === 0 || prevProps.stream[prevProps.stream.length-1] != this.props.stream[this.props.stream.length - 1])
-    ) {
-      this.screenRef.current.scrollTop = this.screenRef.current.scrollHeight;
-    }
   }
 
   render() {
@@ -88,7 +113,7 @@ export default class Cog extends Component {
           <div>
             <div>Status</div>
             <div style={{color: running ? 'lightgreen' : 'red'}}>
-              {this.props.details.status}{(this.props.details.status === 'exit' && this.props.details.exitCode !== undefined) ? ' - ' + this.props.details.exitCode : ''}
+              {this.props.details.status}{(this.props.details.status === 'exit' && this.props.details.exitCode !== undefined) ? ` - ${this.props.details.exitCode}` : ''}
             </div>
           </div>
           <div>
@@ -132,17 +157,17 @@ export default class Cog extends Component {
         <div className='machine-cog-expanded' style={{display: this.state.watching ? 'block' : 'none'}}>
           <div>
             <div className='button' onClick={this.handleButtonClick}>
-                <FontAwesomeIcon icon={faEraser} /> Clear
+              <FontAwesomeIcon icon={faEraser} /> Clear
             </div>
           </div>
           <div className='machine-cog-screen' ref={this.screenRef}>
-            {this.props.stream.map((stream, idx) => (
+            {this.state.stream.map((stream, idx) => (
               <span key={idx} className={stream.type === 'stderr' ? 'error' : ''} dangerouslySetInnerHTML={{__html: ansiUp.ansi_to_html(stream.data)}} />
             ))}
           </div>
           <div className='stat'>
-            <div>Memory: <span>{this.props.stat && this.props.stat.memory !== undefined ? formatMemory(this.props.stat.memory) : '--'}</span></div>
-            <div>CPU Usage: <span>{this.props.stat && this.props.stat.cpu !== undefined ? `${this.props.stat.cpu}%` : '--'}</span></div>
+            <div>Memory: <span>{this.state.stat && this.state.stat.memory !== undefined ? formatMemory(this.state.stat.memory) : '--'}</span></div>
+            <div>CPU Usage: <span>{this.state.stat && this.state.stat.cpu !== undefined ? `${this.state.stat.cpu}%` : '--'}</span></div>
           </div>
         </div>
       </div>

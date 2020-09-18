@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 import { formatMemory } from '../util';
@@ -57,8 +57,6 @@ export default class Machine extends Component {
                 key={index}
                 details={cog}
                 machineId={this.props.details._id}
-                stream={this.props.streams[cog.id] || []}
-                stat={this.props.stats[cog.id] || {}}
               />
             ))}
           </div>

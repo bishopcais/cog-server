@@ -9,9 +9,7 @@ export default class CogServer extends Component {
 
     this.state = {
       machines: [],
-      machinesStream: {},
-      machinesStat: {},
-    }
+    };
 
     socket.on('a cog', (cog) => {
       console.log('a cog', cog);
@@ -37,7 +35,7 @@ export default class CogServer extends Component {
     });
 
     socket.on('r cog', (cog) => {
-      console.log('r cog', cog)
+      console.log('r cog', cog);
       const machines = JSON.parse(JSON.stringify(this.state.machines));
       const idx = machines.findIndex((elem) => elem._id === cog.machineId);
       if (idx === -1) {
@@ -68,42 +66,6 @@ export default class CogServer extends Component {
       console.log('a machines', machines);
       this.setState({machines});
     });
-
-    socket.on('clear', (o) => {
-      console.log('clear', o);
-      const streams = JSON.parse(JSON.stringify(this.state.machinesStream));
-      if (!streams[o.machineId]) {
-        streams[o.machineId] = {};
-      }
-      streams[o.machineId][o.cogId] = [];
-      this.setState({machinesStream: streams});
-    });
-
-    socket.on('stream', (o) => {
-      console.log('stream', o);
-      const streams = JSON.parse(JSON.stringify(this.state.machinesStream));
-      if (!streams[o.machineId]) {
-        streams[o.machineId] = {};
-      }
-      if (!streams[o.machineId][o.cogId]) {
-        streams[o.machineId][o.cogId] = [];
-      }
-      streams[o.machineId][o.cogId].push(o);
-      if (streams[o.machineId][o.cogId].length > 20) {
-        streams[o.machineId][o.cogId].shift();
-      }
-      this.setState({machinesStream: streams});
-    });
-
-    socket.on('stat', (stat) => {
-      // console.log('stat', stat);
-      const stats = JSON.parse(JSON.stringify(this.state.machinesStat));
-      if (!stats[stat.machineId]) {
-        stats[stat.machineId] = {};
-      }
-      stats[stat.machineId][stat.cogId] = stat;
-      this.setState({machinesStat: stats});
-    });
   }
 
   componentDidMount() {
@@ -112,7 +74,7 @@ export default class CogServer extends Component {
   }
 
   componentWillUnmount() {
-    ['a cog', 'a cogs', 'r cog', 'a machine', 'a machines', 'stream', 'stat'].forEach((key) => {
+    ['a cog', 'a cogs', 'r cog', 'a machine', 'a machines'].forEach((key) => {
       socket.off(key);
     });
   }
@@ -124,11 +86,9 @@ export default class CogServer extends Component {
           <Machine
             key={index}
             details={item}
-            streams={this.state.machinesStream[item._id] || {}}
-            stats={this.state.machinesStat[item._id] || {}}
           />
         ))}
       </div>
-    )
+    );
   }
 }
