@@ -18,24 +18,9 @@ export default class Services extends Component {
       this.setState({services});
     });
 
-    /*
-    socket.on('a user', (user) => {
-      console.log('a user', user);
-    });
-
-    socket.on('d user', (user) => {
-      console.log('d user', user);
-    });
-
-    socket.on('a users', (users) => {
-      console.log('a users', users);
-      this.setState({users: users});
-    });
-    */
-
     socket.on('q? services', () => {
       console.log('q? services');
-      socket.emit('q services')
+      socket.emit('q services');
     });
 
     this.openModalAdd = this.openModalAdd.bind(this);
@@ -63,6 +48,12 @@ export default class Services extends Component {
     socket.emit('q services');
   }
 
+  componentWillUnmount() {
+    ['a services', 'q? services'].forEach((key) => {
+      socket.off(key);
+    });
+  }
+
   openModalAdd(event) {
     event.preventDefault();
     this.setFormItems(this.defaultItems);
@@ -87,7 +78,7 @@ export default class Services extends Component {
     this.setState({modalOpen: true});
   }
 
-  closeModal() {
+  closeModal(event) {
     event.preventDefault();
     this.setState({modalOpen: false});
   }
@@ -156,8 +147,8 @@ export default class Services extends Component {
               <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Cancel</button>
             </div>
           </div>
-
         </Modal>
+
         <div className='services-table bg-dark'>
           <table style={{marginBottom: '20px'}}>
             <thead>
@@ -177,9 +168,9 @@ export default class Services extends Component {
               <th colSpan='2'>Options</th>
             </thead>
             <tbody>
-              {this.state.services.map((service, idx) => {
+              {this.state.services.map((service) => {
                 return (
-                  <tr key={`service-${idx}`} style={{backgroundColor: service.status === 'UNRESPONSIVE' ? 'rgb(255,133,133)' : ''}}>
+                  <tr key={service._id} style={{backgroundColor: service.status === 'UNRESPONSIVE' ? 'rgb(255,133,133)' : ''}}>
                     <td>{service.serviceType}</td>
                     <td>{service.instanceName}</td>
                     <td>{service.host}</td>

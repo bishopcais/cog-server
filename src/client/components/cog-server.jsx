@@ -82,9 +82,9 @@ export default class CogServer extends Component {
   render() {
     return (
       <div className='machine-container'>
-        {this.state.machines.map((item, index) => (
+        {this.state.machines.map((item) => (
           <Machine
-            key={index}
+            key={item._id}
             details={item}
           />
         ))}

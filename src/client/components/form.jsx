@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import FormInput from './form-input';
 import { ucFirst } from '../util';
 
 export default class Form extends Component {
@@ -7,8 +8,17 @@ export default class Form extends Component {
     super(props);
 
     const state = {};
+
+    const defaultValues = {
+      'array': [],
+      'boolean': false,
+    };
+
+    this.items = {};
+
     this.props.items.forEach((item) => {
-      state[item.id] = item.value || '';
+      this.items[item.id] = item;
+      state[item.id] = item.value || defaultValues[item.type] || '';
     });
     this.state = state;
 
@@ -17,7 +27,22 @@ export default class Form extends Component {
 
   handleChange(event) {
     const stateChange = {};
-    stateChange[event.target.getAttribute('id')] = event.target.value;
+
+    const elemId = event.target.getAttribute('id');
+    if (!elemId) {
+      const item = this.items[event.target.dataset.id];
+      item.value[event.target.dataset.idx] = event.target.value;
+      stateChange[item.id] = item.value;
+    }
+    else {
+      const item = this.items[elemId];
+      if (item.type === 'boolean') {
+        stateChange[item.id] = event.target.checked;
+      }
+      else {
+        stateChange[item.id] = event.target.value;
+      }
+    }
     this.setState(stateChange);
   }
 
@@ -32,12 +57,13 @@ export default class Form extends Component {
               >
                 {item.label || ucFirst(item.id.replace(/([a-z])([A-Z])/g, (_, first, second) => `${first} ${second.toUpperCase()}`))}
               </label>
-              <input
+              <FormInput
                 type={item.type || 'input'}
                 id={item.id}
                 name={item.id}
                 value={this.state[item.id]}
                 onChange={this.handleChange}
+                stateChange={this.stateChange}
               />
             </p>
           );

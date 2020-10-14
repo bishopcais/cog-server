@@ -52,9 +52,9 @@ export default class Machine extends Component {
         </div>
         <div className='machine-cogs-container-container'>
           <div className='machine-cogs-container d-flex flex-row' style={{opacity: this.props.details.connected ? '1' : '0.4'}}>
-            {this.props.details.cogs.map((cog, index) => (
+            {this.props.details.cogs.map((cog) => (
               <Cog
-                key={index}
+                key={cog.id}
                 details={cog}
                 machineId={this.props.details._id}
               />

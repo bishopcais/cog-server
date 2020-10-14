@@ -3,15 +3,14 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
 const webpackConfig = {
   mode: isProduction ? 'production' : 'development',
   entry: {
-    app: [
-      './src/client/index.jsx',
-    ],
+    app: ['./src/client/index.jsx'],
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -62,6 +61,16 @@ if (!isProduction) {
     contentBase: path.join(__dirname, 'public'),
     port: cog.port,
     host: 'localhost',
+  };
+
+  webpackConfig.optimization = {
+    minimizer: false,
+  };
+}
+
+if (isProduction) {
+  webpackConfig.optimization = {
+    minimizer: [new TerserPlugin()],
   };
 }
 
