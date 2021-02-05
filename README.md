@@ -9,7 +9,7 @@ A dashboard server to make easy managing running cogs within a CAIS.
 ### Docker
 
 ```bash
-docker run --rm --name cog-server -p 7777:7777 bishopcais/cog-server
+docker run --name cog-server -p 7777:7777 bishopcais/cog-server
 ```
 
 ### Locally
