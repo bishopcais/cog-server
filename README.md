@@ -6,11 +6,13 @@ A dashboard server to make easy managing running cogs within a CAIS.
 
 ## Usage
 
-### Docker
+### Docker-Compose
 
 ```bash
-docker run --name cog-server -p 7777:7777 bishopcais/cog-server
+docker-compose up
 ```
+
+This will create a Docker network that contains a MongoDB instance and cog-server instance. You can then connect to it via http://localhost:7777. This is the easiest way to run this.
 
 ### Locally
 
