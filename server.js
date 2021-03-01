@@ -76,7 +76,7 @@ app.use('/api/service', require('./src/server/api/service'));
 
 app.use('/', express.static('public'));
 if (isProduction) {
-  app.use('/js/bundle.js', express.static(path.join(__dirname, 'dist', 'bundle.js')));
+  app.use('/js/app.bundle.js', express.static(path.join(__dirname, 'dist', 'app.bundle.js')));
 }
 
 app.use(
