@@ -56,3 +56,4 @@ RUN /bin/bash -c "mongod &" \
     && runuser -p -u cisl node /home/cisl/server/scripts/create-admin.js
 
 ENTRYPOINT ["/home/cisl/server/.docker/entrypoint.sh"]
+CMD ["mongod"]
