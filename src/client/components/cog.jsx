@@ -35,7 +35,6 @@ export default class Cog extends Component {
     this.handleExpandClick = this.handleExpandClick.bind(this);
 
     this.streamFn = (o) => {
-      console.log(o);
       if (o.machineId !== this.props.machineId || o.cogId !== this.props.details.id) {
         return;
       }
