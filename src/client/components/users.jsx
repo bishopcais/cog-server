@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-modal';
+import cloneDeep from 'lodash/cloneDeep';
 
 import Form from './form';
 import socket from '../socket';
@@ -16,15 +17,18 @@ export default class Users extends Component {
     };
 
     socket.on('a user', (user) => {
-      console.log('a user', user);
+      const users = cloneDeep(this.state.users);
+      users.push(user);
+      this.setState({ users });
     });
 
-    socket.on('d user', (user) => {
-      console.log('d user', user);
+    socket.on('d user', (deletedUser) => {
+      this.setState({
+        users: cloneDeep(this.state.users).filter((user) => user._id !== deletedUser._id),
+      });
     });
 
     socket.on('a users', (users) => {
-      console.log('a users', users);
       this.setState({users: users});
     });
 
@@ -52,14 +56,14 @@ export default class Users extends Component {
 
   openModalAdd(event) {
     event.preventDefault();
+    console.log(this.defaultItems);
     this.setFormItems(this.defaultItems);
     this.openModal();
   }
 
   openModalEdit(event, user) {
-    console.log('edit');
     event.preventDefault();
-    const items = this.defaultItems.slice();
+    const items = cloneDeep(this.defaultItems);
     // TODO: this should map the key array object from:
     // [{_id: '<mongo_id>', key: '<key>'}, ...]
     // to just: ['<key>', ...] and so allow FormInput for array
@@ -82,14 +86,18 @@ export default class Users extends Component {
 
   saveUser(event) {
     event.preventDefault();
+    const user = this.form.current.state;
+    socket.emit('u user', user);
+    this.setState({modalOpen: false});
   }
 
   deleteUser(event, user) {
     event.preventDefault();
+    socket.emit('d user', user);
   }
 
   setFormItems(items) {
-    this.items = items.slice();
+    this.items = cloneDeep(items);
   }
 
   render() {
@@ -116,7 +124,7 @@ export default class Users extends Component {
               </p>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={this.saveService}>Save</button>
+              <button type="button" className="btn btn-primary" onClick={this.saveUser}>Save</button>
               <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Cancel</button>
             </div>
           </div>

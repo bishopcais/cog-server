@@ -23,6 +23,7 @@ export default class Form extends Component {
     this.state = state;
 
     this.handleChange = this.handleChange.bind(this);
+    this.changeState = this.changeState.bind(this);
   }
 
   handleChange(event) {
@@ -46,6 +47,15 @@ export default class Form extends Component {
     this.setState(stateChange);
   }
 
+  changeState(id, values) {
+    console.log(`changeState - id: ${id}`);
+    console.log(values);
+    const item = this.items[id];
+    const stateChange = {};
+    stateChange[item.id] = values;
+    this.setState(stateChange);
+  }
+
   render() {
     return (
       <div>
@@ -63,7 +73,7 @@ export default class Form extends Component {
                 name={item.id}
                 value={this.state[item.id]}
                 onChange={this.handleChange}
-                stateChange={this.stateChange}
+                changeState={this.changeState}
               />
             </p>
           );

@@ -5,17 +5,33 @@ export default class FormInput extends Component {
     super(props);
 
     this.onArrayChange = this.onArrayChange.bind(this);
+    this.onArrayAdd = this.onArrayAdd.bind(this);
+    this.onArrayRemove = this.onArrayRemove.bind(this);
   }
 
   onArrayChange(event, idx) {
     const values = this.props.value;
     values[idx] = event.target.value;
-    this.props.stateChange(event, values);
+    this.props.changeState(event.currentTarget.dataset.id, values);
+  }
+
+  onArrayAdd(event) {
+    const values = this.props.value;
+    values.push({
+      key: '',
+    });
+    this.props.changeState(event.currentTarget.dataset.id, values);
+  }
+
+  onArrayRemove(event, idx) {
+    const values = this.props.value;
+    console.log(idx);
+    values.splice(idx, 1);
+    console.log(values);
+    this.props.changeState(event.currentTarget.dataset.id, values);
   }
 
   render() {
-    console.log(this.props);
-
     if (['hidden', 'input', 'number'].includes(this.props.type)) {
       return (
         <input
@@ -41,12 +57,18 @@ export default class FormInput extends Component {
     else if (this.props.type === 'array') {
       const keys = this.props.value.map((val, idx) => {
         return (
-          <div key={val._id}><input type='input' name={`key_${idx}`} data-id={this.props.id} data-idx={idx} value={val.key} onChange={this.props.onChange} /></div>
+          <div key={val._id || `idx_${idx}`}>
+            <input type='input' name={`key_${idx}`} data-id={this.props.id} data-idx={idx} value={val.key} onChange={this.props.onChange} />
+            <span data-id={this.props.id} data-idx={idx} onClick={(e) => this.onArrayRemove(e, idx)}>-</span>
+          </div>
         );
       });
       return (
         <div>
           {keys}
+          <div>
+            <span data-id={this.props.id} onClick={this.onArrayAdd}>+</span>
+          </div>
         </div>
       );
     }
