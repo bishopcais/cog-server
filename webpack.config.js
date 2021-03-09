@@ -9,6 +9,7 @@ const isProduction = process.env.NODE_ENV === 'production' ? 'production' : 'dev
 
 const webpackConfig = {
   mode: isProduction ? 'production' : 'development',
+  devtool: isProduction ? undefined : 'source-map',
   entry: {
     app: ['./src/client/index.jsx'],
   },
