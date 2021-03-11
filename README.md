@@ -45,7 +45,7 @@ Then, run `node scripts/create-admin.js` to create an admin user to use.
 #### Running it:
 
 ```bash
-node server.js
+npm start
 ```
 
 ## Usage with cog-cli
