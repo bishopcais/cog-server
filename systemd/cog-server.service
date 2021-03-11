@@ -1,0 +1,36 @@
+# This is a sample systemd script for cog-server. The intention
+# is that this service file can be used mostly as-is for running
+# cog-server. To add cog-server as a systemd service, copy it to
+# /etc/systemd/system/ and then chmod it to 644. You should then
+# be able to do `systemctl start cog-server`.
+#
+# The main changes you will need to make to the file is to the
+# values under:
+#     user=
+#     ExecStart=
+#
+# The former should be set to a non-root user account to run
+# the server under. The latter needs to be modified so that the
+# path to server.js points to the right place.
+
+[Unit]
+Description=cog-server service
+# If you are using a systemd managed MongoDB instance, use the
+# following to have this service start after the mongo starts:
+# After=mongodb.service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+# attempt to restart service over a minute
+StartLimitIntervalSec=60
+# this 
+User=root
+# set the path here to where the top-level server.js lives
+ExecStart=/usr/bin/env node /path/to/server.js
+
+[Install]
+WantedBy=multi-user.target
