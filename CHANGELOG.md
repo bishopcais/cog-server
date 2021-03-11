@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.6.0
+
+### Features
+
+* Create new / edit user form
+
+### Bugfixes
+
+* Widen cog display
+* Fix production express not exposing webpack bundle
+* Update Dockerfile to run `mongod`
+
+### Chores
+
+* remove legacy implementation files
+* Update dependencies
+
 ## v1.5.0
 
 * Fix typo in Dockerfile entrypoint
