@@ -32,7 +32,13 @@ export default class Form extends Component {
     const elemId = event.target.getAttribute('id');
     if (!elemId) {
       const item = this.items[event.target.dataset.id];
-      item.value[event.target.dataset.idx] = event.target.value;
+      if (!item.value) {
+        item.value = [];
+      }
+      item.value[event.target.dataset.idx] = {
+        ...item.value[event.target.dataset.idx],
+        key: event.target.value,
+      };
       stateChange[item.id] = item.value;
     }
     else {
@@ -48,8 +54,6 @@ export default class Form extends Component {
   }
 
   changeState(id, values) {
-    console.log(`changeState - id: ${id}`);
-    console.log(values);
     const item = this.items[id];
     const stateChange = {};
     stateChange[item.id] = values;

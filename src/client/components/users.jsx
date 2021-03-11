@@ -18,7 +18,13 @@ export default class Users extends Component {
 
     socket.on('a user', (user) => {
       const users = cloneDeep(this.state.users);
-      users.push(user);
+      const idx = users.findIndex((u) => u._id === user._id);
+      if (idx > -1) {
+        users[idx] = user;
+      }
+      else {
+        users.push(user);
+      }
       this.setState({ users });
     });
 
@@ -56,7 +62,6 @@ export default class Users extends Component {
 
   openModalAdd(event) {
     event.preventDefault();
-    console.log(this.defaultItems);
     this.setFormItems(this.defaultItems);
     this.openModal();
   }

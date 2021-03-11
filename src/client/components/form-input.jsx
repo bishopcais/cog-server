@@ -25,9 +25,7 @@ export default class FormInput extends Component {
 
   onArrayRemove(event, idx) {
     const values = this.props.value;
-    console.log(idx);
     values.splice(idx, 1);
-    console.log(values);
     this.props.changeState(event.currentTarget.dataset.id, values);
   }
 
