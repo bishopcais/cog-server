@@ -38,7 +38,7 @@ cp cog.sample.json cog.json
 ```
 
 Edit `cog.json` and point `mongo` to the connection details. See
-the documentation for [@cisl/io](https://github.com/cislrpi/io) for details.
+the documentation for [@cisl/io#mongo](https://github.com/cislrpi/io#mongo) for configuration details.
 
 Then, run `node scripts/create-admin.js` to create an admin user to use.
 
