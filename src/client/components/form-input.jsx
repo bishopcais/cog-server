@@ -55,17 +55,38 @@ export default class FormInput extends Component {
     else if (this.props.type === 'array') {
       const keys = this.props.value.map((val, idx) => {
         return (
-          <div key={val._id || `idx_${idx}`}>
+          <div key={val._id || `idx_${idx}`} style={{ marginBottom: 2 }}>
             <input type='input' name={`key_${idx}`} data-id={this.props.id} data-idx={idx} value={val.key} onChange={this.props.onChange} />
-            <span data-id={this.props.id} data-idx={idx} onClick={(e) => this.onArrayRemove(e, idx)}>-</span>
+            <span
+              data-id={this.props.id}
+              data-idx={idx}
+              onClick={(e) => this.onArrayRemove(e, idx)}
+              style={{
+                border: '1px solid black',
+                padding: '2px 8px',
+                marginLeft: 10,
+              }}
+            >
+              -
+            </span>
           </div>
         );
       });
       return (
         <div>
           {keys}
-          <div>
-            <span data-id={this.props.id} onClick={this.onArrayAdd}>+</span>
+          <div style={{ marginTop: 10 }}>
+            <span
+              data-id={this.props.id}
+              onClick={this.onArrayAdd}
+              style={{
+                border: '1px solid black',
+                padding: '2px 8px',
+                marginTop: 5,
+              }}
+            >
+              +
+            </span>
           </div>
         </div>
       );
