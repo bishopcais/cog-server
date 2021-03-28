@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cloneDeep from 'lodash/cloneDeep'
 import socket from '../socket';
 
 import Machine from './machine';
@@ -66,6 +67,14 @@ export default class CogServer extends Component {
       console.log('a machines', machines);
       this.setState({machines});
     });
+
+    socket.on('r machine', (machine) => {
+      console.log('r machine', machine);
+      const machines = cloneDeep(this.state.machines);
+      this.setState({
+        machines: machines.filter((m) => m._id !== machine._id),
+      });
+    });
   }
 
   componentDidMount() {
@@ -74,7 +83,7 @@ export default class CogServer extends Component {
   }
 
   componentWillUnmount() {
-    ['a cog', 'a cogs', 'r cog', 'a machine', 'a machines'].forEach((key) => {
+    ['a cog', 'a cogs', 'r cog', 'a machine', 'a machines', 'r machine'].forEach((key) => {
       socket.off(key);
     });
   }

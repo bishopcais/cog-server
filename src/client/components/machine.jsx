@@ -1,18 +1,33 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { faLink, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { formatMemory } from '../util';
 import Cog from './cog';
+import socket from '../socket';
 
 export default class Machine extends Component {
+  constructor(props) {
+    super(props);
+    this.removeMachine = this.removeMachine.bind(this);
+  }
+
+  removeMachine() {
+    socket.emit('r? machine', this.props.details);
+  }
+
   render() {
     return (
       <div className='machine bg-dark'>
         <div className='machine-details'>
           <div>
-            <div style={{color: this.props.details.connected ? 'lightgreen' : 'red'}}><FontAwesomeIcon icon={faLink} /></div>
+            <div>
+              <span style={{color: this.props.details.connected ? 'lightgreen' : 'red'}}><FontAwesomeIcon icon={faLink} /></span>
+              {!this.props.details.connected && (
+                <span style={{marginLeft: 15, cursor: 'pointer'}} onClick={this.removeMachine}><FontAwesomeIcon icon={faTrash} /></span>
+              )}
+            </div>
             <div>
               {this.props.details.connected ? moment(this.props.details.lastConnected).format('MM/DD/YY hh:MMa') : moment(this.props.details.lastDisconnected).format('MM/DD/YY hh:MMa')}
             </div>

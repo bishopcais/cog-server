@@ -104,8 +104,7 @@ export default class Container extends Component {
         }
 
         return (
-          // eslint-disable-next-line react/jsx-no-undef
-          <React.Fragment>
+          <>
             <ConnectState connected={this.state.connected} />
             <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
               <a className="navbar-brand" href="#"><FontAwesomeIcon icon={faCogs} style={{marginRight: '5px'}} size='lg' /> Cog Server</a>
@@ -134,7 +133,7 @@ export default class Container extends Component {
             </nav>
 
             {view}
-          </React.Fragment>
+          </>
         );
       }
 

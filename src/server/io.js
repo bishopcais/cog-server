@@ -273,6 +273,18 @@ module.exports = (io) => {
       });
     });
 
+    socket.on('r? machine', async (m) => {
+      if (m.connected) {
+        return;
+      }
+      const machine = await Machine.findById(m._id).exec();
+      if (machine.connected) {
+        return;
+      }
+      await Machine.findByIdAndDelete(machine._id).exec();
+      socket.emit('r machine', machine);
+    });
+
     socket.on('action', (action) => {
       const mid = action.machineId;
       const cid = action.cogId;
