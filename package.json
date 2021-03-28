@@ -1,7 +1,7 @@
 {
   "name": "cog-server",
   "description": "To use it install packages with `npm install`",
-  "version": "1.5.0",
+  "version": "1.7.0",
   "author": "Ashwin Hamal",
   "license": "MIT",
   "maintainers": [
