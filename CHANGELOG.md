@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.7.0
+
+### Features
+
+* Allow removing disconnected machines from server
+
+### Bugfixes
+
+* Fix wrapping of cogs overflowing container
+
 ## v1.6.0
 
 ### Features
