@@ -148,9 +148,10 @@ body {
 
 .machine-cog
 {
-    padding: 5px;
-    width: 500px;
     position: relative;
+    width: 500px;
+    margin: 2px;
+    padding: 5px;
 }
 
 .machine-cog-titlebar
