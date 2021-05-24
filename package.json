@@ -37,7 +37,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
     "@masterodin/eslint-config-javascript": "^2.0.1",
-    "ansi_up": "^4.0.4",
+    "ansi_up": "^5.0.0",
     "babel-loader": "^8.1.0",
     "eslint": "^7.7.0",
     "eslint-plugin-react": "^7.20.0",
